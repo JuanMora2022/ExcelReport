@@ -19,8 +19,8 @@ load_dotenv()
 def parse_arguments():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--type",
-        type=str,
+        "--type_report",
+        type=int,
         default=1,
         help="Define el tipo de Reporte a crear",
     )
@@ -31,12 +31,7 @@ def main():
     start_time_readable = datetime.fromtimestamp(start_time).strftime("%Y-%m-%d")
     try:
         args = parse_arguments()
-        if args.type == None or args.type == "":
-            print(
-                "Debe indicar el reporte a crear por defecto 1"
-            )
-        else:
-            connection_postgres = ConnectionDB(
+        connection_postgres = ConnectionDB(
                 "postgres",
                 os.getenv("HOST_PG"),
                 os.getenv("SSID_PG"),
@@ -44,16 +39,22 @@ def main():
                 os.getenv("PASS_PG"),
                 os.getenv("PORT_PG"),
             )
-            connection_postgres.connect()
-            # connection_oracle = ConnectionDB(
-            #     "oracle",
-            #     os.getenv("HOST_ORCL"),
-            #     os.getenv("SSID_ORCL"),
-            #     os.getenv("USER_ORCL"),
-            #     os.getenv("PASS_ORCL"),
-            #     os.getenv("PORT_ORCL"),
-            # )            
-            # connection_oracle.connect()
+        connection_postgres.connect()
+        # connection_oracle = ConnectionDB(
+        #     "oracle",
+        #     os.getenv("HOST_ORCL"),
+        #     os.getenv("SSID_ORCL"),
+        #     os.getenv("USER_ORCL"),
+        #     os.getenv("PASS_ORCL"),
+        #     os.getenv("PORT_ORCL"),
+        # )            
+        # connection_oracle.connect()
+        if args.type_report == 1:
+            print("Generar reporte 1")
+        elif args.type_report == 2:
+            print("Generar reporte 2")
+        else:
+            print("Numero de reporte no identificado",args.type_report)
     except Exception as e:
         print(f"Error durante la ejecución: {e}")
 
