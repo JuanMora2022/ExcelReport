@@ -5,7 +5,7 @@ import os
 import time
 from datetime import datetime
 from dotenv import load_dotenv
-from BD.connection_db import ConnectionDB
+from bd.connection_db import ConnectionDB
 # from bd.querys_db import QuerysDB
 # from process.order_process import OrderProcess
 # from process.excel_process import ExcelProcess
@@ -40,19 +40,18 @@ def main():
                 os.getenv("PORT_PG"),
             )
         connection_postgres.connect()
-        # connection_oracle = ConnectionDB(
-        #     "oracle",
-        #     os.getenv("HOST_ORCL"),
-        #     os.getenv("SSID_ORCL"),
-        #     os.getenv("USER_ORCL"),
-        #     os.getenv("PASS_ORCL"),
-        #     os.getenv("PORT_ORCL"),
-        # )            
-        # connection_oracle.connect()
+        connection_oracle = ConnectionDB(
+            "oracle",
+            os.getenv("HOST_ORCL"),
+            os.getenv("SSID_ORCL"),
+            os.getenv("USER_ORCL"),
+            os.getenv("PASS_ORCL"),
+            os.getenv("PORT_ORCL"),
+        )            
+        connection_oracle.connect()
         if args.type_report == 1:
             print("Generar reporte 1")
-        elif args.type_report == 2:
-            print("Generar reporte 2")
+        
         else:
             print("Numero de reporte no identificado",args.type_report)
     except Exception as e:
