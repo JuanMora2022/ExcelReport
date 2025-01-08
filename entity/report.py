@@ -1,4 +1,5 @@
 import bd.queries_pg
+import bd.queries_oc
 from bd.querys_db import QuerysDB
 from bd.record_manager import RecordManager
 import logging
@@ -11,54 +12,31 @@ import os
 
 
 class ReportProcess(RecordManager):
-    def __init__(self, oc_connection, pg_connection):
+    def __init__(self, oc_connection, pg_connection, type_report):
         super().__init__(oc_connection, pg_connection)
-        self.pg_connection
-        self.oc_connection
+        self.pg_connection = pg_connection  
+        self.oc_connection = oc_connection
+        self.type_report = type_report
         
-        
-    import os
 
     def execute(self):
-        while True:
-            try:
-                os.system('cls')  # cambiar a clear en linux
-                print("+++++++++++++++ Seleccione tipo de reporte +++++++++++")
-                print("1. Reporte Novedad Fichas Nuevas")
-                print("21. Salir")
-                print("++++++++++++++++++++++++++++++++++++")
+        try:
+         
+            if self.type_report == 1:
+                self._create_report_type_one()
+            else:
+                print("Tipo de reporte no válido.")
                 
-                report = int(input("Seleccione el reporte a ejecutar: "))
-                print("        ")
-                
-                if report == 1:
-                    print("Generando Reporte Novedad Fichas Nuevas...")
-                   
-                elif report == 21:
-                    print("Saliendo...")
-                    break  
-                else:
-                    print("Opción no válida, intente nuevamente.")
-                
-                input("Presione Enter para continuar...")  
-                
-            except Exception as e:
-                print(f"Ocurrió una excepción al crear el reporte: {e}")
+        except Exception as e:
+            print(f"Ocurrió una excepción al crear el reporte: {e}")
+            import traceback
+            traceback.print_exc()
 
-                
-                
-            
-            
     def _create_report_type_one(self):
-        results = self.select_pg(
-            queries_pg.get_record_pg(), (self.fic_id,), False
+        records = self.select_oc(
+            queries_oc.get_record_oc(), {}, False
         )
+        return records
 
-        print("se intenta realizar una consulta")
-        
-        
-        
-
-        
             
 

@@ -46,7 +46,7 @@ def main():
         connection_oracle.connect()
         if args.type_report == 1 or args.type_report =='':
             print("Generar reporte 1")
-            report_process = ReportProcess(connection_oracle, connection_postgres)
+            report_process = ReportProcess(connection_oracle, connection_postgres,args.type_report)
             report_process.execute()
       
             

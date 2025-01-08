@@ -1,0 +1,370 @@
+[
+    {
+        "label": "cx_Oracle",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "cx_Oracle",
+        "description": "cx_Oracle",
+        "detail": "cx_Oracle",
+        "documentation": {}
+    },
+    {
+        "label": "psycopg2",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "psycopg2",
+        "description": "psycopg2",
+        "detail": "psycopg2",
+        "documentation": {}
+    },
+    {
+        "label": "sql",
+        "importPath": "psycopg2",
+        "description": "psycopg2",
+        "isExtraImport": true,
+        "detail": "psycopg2",
+        "documentation": {}
+    },
+    {
+        "label": "sql",
+        "importPath": "psycopg2",
+        "description": "psycopg2",
+        "isExtraImport": true,
+        "detail": "psycopg2",
+        "documentation": {}
+    },
+    {
+        "label": "sql",
+        "importPath": "psycopg2",
+        "description": "psycopg2",
+        "isExtraImport": true,
+        "detail": "psycopg2",
+        "documentation": {}
+    },
+    {
+        "label": "sql",
+        "importPath": "psycopg2",
+        "description": "psycopg2",
+        "isExtraImport": true,
+        "detail": "psycopg2",
+        "documentation": {}
+    },
+    {
+        "label": "sql",
+        "importPath": "psycopg2",
+        "description": "psycopg2",
+        "isExtraImport": true,
+        "detail": "psycopg2",
+        "documentation": {}
+    },
+    {
+        "label": "time",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "time",
+        "description": "time",
+        "detail": "time",
+        "documentation": {}
+    },
+    {
+        "label": "load_dotenv",
+        "importPath": "dotenv",
+        "description": "dotenv",
+        "isExtraImport": true,
+        "detail": "dotenv",
+        "documentation": {}
+    },
+    {
+        "label": "load_dotenv",
+        "importPath": "dotenv",
+        "description": "dotenv",
+        "isExtraImport": true,
+        "detail": "dotenv",
+        "documentation": {}
+    },
+    {
+        "label": "os",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "os",
+        "description": "os",
+        "detail": "os",
+        "documentation": {}
+    },
+    {
+        "label": "logging",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "logging",
+        "description": "logging",
+        "detail": "logging",
+        "documentation": {}
+    },
+    {
+        "label": "traceback",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "traceback",
+        "description": "traceback",
+        "detail": "traceback",
+        "documentation": {}
+    },
+    {
+        "label": "TimeoutException",
+        "importPath": "exception.timeout_exception",
+        "description": "exception.timeout_exception",
+        "isExtraImport": true,
+        "detail": "exception.timeout_exception",
+        "documentation": {}
+    },
+    {
+        "label": "TimeoutException",
+        "importPath": "exception.timeout_exception",
+        "description": "exception.timeout_exception",
+        "isExtraImport": true,
+        "detail": "exception.timeout_exception",
+        "documentation": {}
+    },
+    {
+        "label": "pdb",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "pdb",
+        "description": "pdb",
+        "detail": "pdb",
+        "documentation": {}
+    },
+    {
+        "label": "concurrent.futures",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "concurrent.futures",
+        "description": "concurrent.futures",
+        "detail": "concurrent.futures",
+        "documentation": {}
+    },
+    {
+        "label": "bd.querys_db",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "bd.querys_db",
+        "description": "bd.querys_db",
+        "detail": "bd.querys_db",
+        "documentation": {}
+    },
+    {
+        "label": "QuerysDB",
+        "importPath": "bd.querys_db",
+        "description": "bd.querys_db",
+        "isExtraImport": true,
+        "detail": "bd.querys_db",
+        "documentation": {}
+    },
+    {
+        "label": "QuerysDB",
+        "importPath": "bd.querys_db",
+        "description": "bd.querys_db",
+        "isExtraImport": true,
+        "detail": "bd.querys_db",
+        "documentation": {}
+    },
+    {
+        "label": "ExecutionQuery",
+        "importPath": "bd.execution_query",
+        "description": "bd.execution_query",
+        "isExtraImport": true,
+        "detail": "bd.execution_query",
+        "documentation": {}
+    },
+    {
+        "label": "bd.queries_pg",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "bd.queries_pg",
+        "description": "bd.queries_pg",
+        "detail": "bd.queries_pg",
+        "documentation": {}
+    },
+    {
+        "label": "bd.queries_oc",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "bd.queries_oc",
+        "description": "bd.queries_oc",
+        "detail": "bd.queries_oc",
+        "documentation": {}
+    },
+    {
+        "label": "RecordManager",
+        "importPath": "bd.record_manager",
+        "description": "bd.record_manager",
+        "isExtraImport": true,
+        "detail": "bd.record_manager",
+        "documentation": {}
+    },
+    {
+        "label": "RecordManager",
+        "importPath": "bd.record_manager",
+        "description": "bd.record_manager",
+        "isExtraImport": true,
+        "detail": "bd.record_manager",
+        "documentation": {}
+    },
+    {
+        "label": "date",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "date",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "argparse",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "argparse",
+        "description": "argparse",
+        "detail": "argparse",
+        "documentation": {}
+    },
+    {
+        "label": "ConnectionDB",
+        "importPath": "bd.connection_db",
+        "description": "bd.connection_db",
+        "isExtraImport": true,
+        "detail": "bd.connection_db",
+        "documentation": {}
+    },
+    {
+        "label": "ReportProcess",
+        "importPath": "entity.report",
+        "description": "entity.report",
+        "isExtraImport": true,
+        "detail": "entity.report",
+        "documentation": {}
+    },
+    {
+        "label": "sys",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "sys",
+        "description": "sys",
+        "detail": "sys",
+        "documentation": {}
+    },
+    {
+        "label": "ConnectionDB",
+        "kind": 6,
+        "importPath": "bd.connection_db",
+        "description": "bd.connection_db",
+        "peekOfCode": "class ConnectionDB:\n    def __init__(self, db_type, host, database, user, password, port):\n        self.db_type = db_type\n        self.host = host\n        self.database = database\n        self.user = user\n        self.password = password\n        self.port = port\n        self.connection = None\n    def connect(self):",
+        "detail": "bd.connection_db",
+        "documentation": {}
+    },
+    {
+        "label": "ExecutionQuery",
+        "kind": 6,
+        "importPath": "bd.execution_query",
+        "description": "bd.execution_query",
+        "peekOfCode": "class ExecutionQuery:\n    def __init__(self, oc_connection, pg_connection):\n        self.oc_connection = oc_connection\n        self.pg_connection = pg_connection\n    def select_oc(self, query, params={}, one=True):\n        try:\n            with concurrent.futures.ThreadPoolExecutor() as executor:\n                future = executor.submit(self._execute_query_oc, query, params, one)\n                logging.info(future)\n                return future.result(timeout=self.TIME_OUT)",
+        "detail": "bd.execution_query",
+        "documentation": {}
+    },
+    {
+        "label": "get_record_oc",
+        "kind": 2,
+        "importPath": "bd.queries_oc",
+        "description": "bd.queries_oc",
+        "peekOfCode": "def get_record_oc():\n    return \"\"\"\n      select * from \"INTEGRACION\".\"V_FICHA_CARACTERIZACION_B\" vfcb \n      \"\"\"",
+        "detail": "bd.queries_oc",
+        "documentation": {}
+    },
+    {
+        "label": "get_record_pg",
+        "kind": 2,
+        "importPath": "bd.queries_pg",
+        "description": "bd.queries_pg",
+        "peekOfCode": "def get_record_pg():\n    return \"\"\"\n      select * from \"INTEGRACION\".\"V_FICHA_CARACTERIZACION_B\" vfcb \n      \"\"\"",
+        "detail": "bd.queries_pg",
+        "documentation": {}
+    },
+    {
+        "label": "QuerysDB",
+        "kind": 6,
+        "importPath": "bd.querys_db",
+        "description": "bd.querys_db",
+        "peekOfCode": "class QuerysDB:\n    TIME_OUT = 300\n    def __init__(self, oc_connection, pg_connection):\n        self.oc_connection = oc_connection\n        self.pg_connection = pg_connection\n    def select_oc(self, query, params={}, one=True):\n        try:\n            with concurrent.futures.ThreadPoolExecutor() as executor:\n                future = executor.submit(self._execute_query_oc, query, params, one)\n                logging.info(future)",
+        "detail": "bd.querys_db",
+        "documentation": {}
+    },
+    {
+        "label": "RecordManager",
+        "kind": 6,
+        "importPath": "bd.record_manager",
+        "description": "bd.record_manager",
+        "peekOfCode": "class RecordManager(ExecutionQuery):\n    def __init__(self, oc_connection, pg_connection):\n        super().__init__(oc_connection, pg_connection)\n        self.oc_connection = oc_connection\n        self.pg_connection = pg_connection\n    def _get_record_by_fic_id(self, query_select, ids):\n        record = self.select_pg()",
+        "detail": "bd.record_manager",
+        "documentation": {}
+    },
+    {
+        "label": "ReportProcess",
+        "kind": 6,
+        "importPath": "entity.report copy",
+        "description": "entity.report copy",
+        "peekOfCode": "class ReportProcess(RecordManager):\n    def __init__(self, oc_connection, pg_connection):\n        super().__init__(oc_connection, pg_connection)\n        self.pg_connection\n        self.oc_connection\n    import os\n    def execute(self):\n        while True:\n            try:\n                os.system('cls')  # cambiar a clear en linux",
+        "detail": "entity.report copy",
+        "documentation": {}
+    },
+    {
+        "label": "ReportProcess",
+        "kind": 6,
+        "importPath": "entity.report",
+        "description": "entity.report",
+        "peekOfCode": "class ReportProcess(RecordManager):\n    def __init__(self, oc_connection, pg_connection, type_report):\n        super().__init__(oc_connection, pg_connection)\n        self.pg_connection = pg_connection  \n        self.oc_connection = oc_connection\n        self.type_report = type_report\n    def execute(self):\n        try:\n            if self.type_report == 1:\n                self._create_report_type_one()",
+        "detail": "entity.report",
+        "documentation": {}
+    },
+    {
+        "label": "TimeoutException",
+        "kind": 6,
+        "importPath": "exception.timeout_exception",
+        "description": "exception.timeout_exception",
+        "peekOfCode": "class TimeoutException(Exception):\n    def __init__(self, message):\n        super().__init__(message)\n        self.message = message",
+        "detail": "exception.timeout_exception",
+        "documentation": {}
+    },
+    {
+        "label": "parse_arguments",
+        "kind": 2,
+        "importPath": "script",
+        "description": "script",
+        "peekOfCode": "def parse_arguments():\n    parser = argparse.ArgumentParser()\n    parser.add_argument(\n        \"--type_report\",\n        type=int,\n        default=1,\n        help=\"Define el tipo de Reporte a crear\",\n    )\n    return parser.parse_args()\ndef main():",
+        "detail": "script",
+        "documentation": {}
+    },
+    {
+        "label": "main",
+        "kind": 2,
+        "importPath": "script",
+        "description": "script",
+        "peekOfCode": "def main():\n    start_time = time.time()\n    start_time_readable = datetime.fromtimestamp(start_time).strftime(\"%Y-%m-%d\")\n    try:\n        args = parse_arguments()\n        connection_postgres = ConnectionDB(\n                \"postgres\",\n                os.getenv(\"HOST_PG\"),\n                os.getenv(\"SSID_PG\"),\n                os.getenv(\"USER_PG\"),",
+        "detail": "script",
+        "documentation": {}
+    }
+]
