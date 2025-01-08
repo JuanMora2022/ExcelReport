@@ -1,5 +1,5 @@
-import BD.query_db as queries
-from BD.execution_query import ExecutionQuery
+import bd.querys_db as queries
+from bd.execution_query import ExecutionQuery
 from psycopg2 import sql
 import cx_Oracle
 

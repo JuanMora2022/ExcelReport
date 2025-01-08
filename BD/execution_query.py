@@ -1,4 +1,4 @@
-from exeption.timeout_exception import TimeoutException
+from exception.timeout_exception import TimeoutException
 import cx_Oracle
 import psycopg2
 from psycopg2 import sql
@@ -30,14 +30,6 @@ class ExecutionQuery:
             (error,) = e.args
             table = self._table_name(query)
             logging.error(f"Error al consultar datos {table}: {e}")
-            #insert_into_histories = InsertIntoHistories(self.pg_connection)
-            # insert_into_histories.insert(
-            #     (
-            #         f"Error al ejecutar la consulta en {table} en SOFIA(Oracle): {error.message}",
-            #         error.code,
-            #         "error",
-            #     )
-            # )
             return None
     
     def select_pg(self, query, params=None, one=True):
@@ -51,8 +43,6 @@ class ExecutionQuery:
         except psycopg2.Error as e:
             self.pg_connection.connection.rollback()
             table = self._table_name(query)
-            # insert_into_histories = InsertIntoHistories(self.pg_connection)
-            # insert_into_histories.insert((f'Error al ejecutar la consulta en la tabla {table} INTEGRACION(Postgres): {e.pgerror}',e.pgcode,'error'))
             print(f"Error al consultar datos {table}:", e)
 
     def _table_name(self, query):

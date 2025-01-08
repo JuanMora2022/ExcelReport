@@ -6,13 +6,8 @@ import time
 from datetime import datetime
 from dotenv import load_dotenv
 from bd.connection_db import ConnectionDB
-# from bd.querys_db import QuerysDB
-# from process.order_process import OrderProcess
-# from process.excel_process import ExcelProcess
-# from process.internal_process import InternalProcess
-# import bd.queries as queries
-import json
-
+from entity.report import ReportProcess
+import sys
 
 load_dotenv()
 
@@ -49,11 +44,16 @@ def main():
             os.getenv("PORT_ORCL"),
         )            
         connection_oracle.connect()
-        if args.type_report == 1:
+        if args.type_report == 1 or args.type_report =='':
             print("Generar reporte 1")
+            report_process = ReportProcess(connection_oracle, connection_postgres)
+            report_process.execute()
+      
+            
+        if args.type_report == 2:
+            print("Generar reporte 2")
         
-        else:
-            print("Numero de reporte no identificado",args.type_report)
+     
     except Exception as e:
         print(f"Error durante la ejecución: {e}")
 
