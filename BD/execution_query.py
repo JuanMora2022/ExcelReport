@@ -8,9 +8,13 @@ import concurrent.futures
 import logging
 
 class ExecutionQuery:
+    
+    TIME_OUT = 300
+      
     def __init__(self, oc_connection, pg_connection):
         self.oc_connection = oc_connection
         self.pg_connection = pg_connection
+        
 
     def select_oc(self, query, params={}, one=True):
         try:

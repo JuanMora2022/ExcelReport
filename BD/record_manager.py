@@ -1,4 +1,4 @@
-import bd.querys_db as queries
+import bd.execution_query as queries
 from bd.execution_query import ExecutionQuery
 from psycopg2 import sql
 import cx_Oracle

@@ -44,14 +44,22 @@ def main():
             os.getenv("PORT_ORCL"),
         )            
         connection_oracle.connect()
-        if args.type_report == 1 or args.type_report =='':
-            print("Generar reporte 1")
+        os.system('cls')#clear para linux
+        print(" ")
+        print("+++++++++ Tipos de reportes (type_report) ++++++++++++")
+        print("1.Prueba Reporte")
+        print("2.Novedad Fichas Nuevas ")
+        print("   ")
+        
+        
+        if isinstance(args.type_report, int) or args.type_report =='':
             report_process = ReportProcess(connection_oracle, connection_postgres,args.type_report)
             report_process.execute()
       
-            
         if args.type_report == 2:
             print("Generar reporte 2")
+            
+       
         
      
     except Exception as e:

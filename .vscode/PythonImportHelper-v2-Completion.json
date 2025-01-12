@@ -50,14 +50,6 @@
         "documentation": {}
     },
     {
-        "label": "sql",
-        "importPath": "psycopg2",
-        "description": "psycopg2",
-        "isExtraImport": true,
-        "detail": "psycopg2",
-        "documentation": {}
-    },
-    {
         "label": "time",
         "kind": 6,
         "isExtraImport": true,
@@ -118,14 +110,6 @@
         "documentation": {}
     },
     {
-        "label": "TimeoutException",
-        "importPath": "exception.timeout_exception",
-        "description": "exception.timeout_exception",
-        "isExtraImport": true,
-        "detail": "exception.timeout_exception",
-        "documentation": {}
-    },
-    {
         "label": "pdb",
         "kind": 6,
         "isExtraImport": true,
@@ -144,28 +128,28 @@
         "documentation": {}
     },
     {
-        "label": "bd.querys_db",
+        "label": "bd.execution_query",
         "kind": 6,
         "isExtraImport": true,
-        "importPath": "bd.querys_db",
-        "description": "bd.querys_db",
-        "detail": "bd.querys_db",
+        "importPath": "bd.execution_query",
+        "description": "bd.execution_query",
+        "detail": "bd.execution_query",
         "documentation": {}
     },
     {
-        "label": "QuerysDB",
-        "importPath": "bd.querys_db",
-        "description": "bd.querys_db",
+        "label": "ExecutionQuery",
+        "importPath": "bd.execution_query",
+        "description": "bd.execution_query",
         "isExtraImport": true,
-        "detail": "bd.querys_db",
+        "detail": "bd.execution_query",
         "documentation": {}
     },
     {
-        "label": "QuerysDB",
-        "importPath": "bd.querys_db",
-        "description": "bd.querys_db",
+        "label": "ExecutionQuery",
+        "importPath": "bd.execution_query",
+        "description": "bd.execution_query",
         "isExtraImport": true,
-        "detail": "bd.querys_db",
+        "detail": "bd.execution_query",
         "documentation": {}
     },
     {
@@ -219,6 +203,14 @@
         "documentation": {}
     },
     {
+        "label": "datetime",
+        "importPath": "datetime",
+        "description": "datetime",
+        "isExtraImport": true,
+        "detail": "datetime",
+        "documentation": {}
+    },
+    {
         "label": "date",
         "importPath": "datetime",
         "description": "datetime",
@@ -232,6 +224,23 @@
         "description": "datetime",
         "isExtraImport": true,
         "detail": "datetime",
+        "documentation": {}
+    },
+    {
+        "label": "pandas",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "pandas",
+        "description": "pandas",
+        "detail": "pandas",
+        "documentation": {}
+    },
+    {
+        "label": "ExcelProcess",
+        "importPath": "entity.excel",
+        "description": "entity.excel",
+        "isExtraImport": true,
+        "detail": "entity.excel",
         "documentation": {}
     },
     {
@@ -282,7 +291,7 @@
         "kind": 6,
         "importPath": "bd.execution_query",
         "description": "bd.execution_query",
-        "peekOfCode": "class ExecutionQuery:\n    def __init__(self, oc_connection, pg_connection):\n        self.oc_connection = oc_connection\n        self.pg_connection = pg_connection\n    def select_oc(self, query, params={}, one=True):\n        try:\n            with concurrent.futures.ThreadPoolExecutor() as executor:\n                future = executor.submit(self._execute_query_oc, query, params, one)\n                logging.info(future)\n                return future.result(timeout=self.TIME_OUT)",
+        "peekOfCode": "class ExecutionQuery:\n    TIME_OUT = 300\n    def __init__(self, oc_connection, pg_connection):\n        self.oc_connection = oc_connection\n        self.pg_connection = pg_connection\n    def select_oc(self, query, params={}, one=True):\n        try:\n            with concurrent.futures.ThreadPoolExecutor() as executor:\n                future = executor.submit(self._execute_query_oc, query, params, one)\n                logging.info(future)",
         "detail": "bd.execution_query",
         "documentation": {}
     },
@@ -291,7 +300,16 @@
         "kind": 2,
         "importPath": "bd.queries_oc",
         "description": "bd.queries_oc",
-        "peekOfCode": "def get_record_oc():\n    return \"\"\"\n      select * from \"INTEGRACION\".\"V_FICHA_CARACTERIZACION_B\" vfcb \n      \"\"\"",
+        "peekOfCode": "def get_record_oc():\n    return \"\"\"\n      select * from \"INTEGRACION\".\"V_FICHA_CARACTERIZACION_B\" vfcb \n      \"\"\"\ndef get_novedad_fichas_nuevas():\n  return \"\"\"\n  select \"FIC_ID\",\"FIC_FCH_INICIALIZACION\",\"FIC_FCH_FINALIZACION\",\"FIC_FCH_REGISTRO\",\"FIC_MOD_FORMACION\",\"FIC_ESTADO\" from \"INTEGRACION\".\"V_FICHA_CARACTERIZACION_B\" vfcb where \"FIC_FCH_REGISTRO\" >= TIMESTAMP '2024-11-30 00:00:00' and \"FIC_ESTADO\" in(1,6,7) and \"FIC_MOD_FORMACION\" <> 'P'\n  \"\"\"",
+        "detail": "bd.queries_oc",
+        "documentation": {}
+    },
+    {
+        "label": "get_novedad_fichas_nuevas",
+        "kind": 2,
+        "importPath": "bd.queries_oc",
+        "description": "bd.queries_oc",
+        "peekOfCode": "def get_novedad_fichas_nuevas():\n  return \"\"\"\n  select \"FIC_ID\",\"FIC_FCH_INICIALIZACION\",\"FIC_FCH_FINALIZACION\",\"FIC_FCH_REGISTRO\",\"FIC_MOD_FORMACION\",\"FIC_ESTADO\" from \"INTEGRACION\".\"V_FICHA_CARACTERIZACION_B\" vfcb where \"FIC_FCH_REGISTRO\" >= TIMESTAMP '2024-11-30 00:00:00' and \"FIC_ESTADO\" in(1,6,7) and \"FIC_MOD_FORMACION\" <> 'P'\n  \"\"\"",
         "detail": "bd.queries_oc",
         "documentation": {}
     },
@@ -305,15 +323,6 @@
         "documentation": {}
     },
     {
-        "label": "QuerysDB",
-        "kind": 6,
-        "importPath": "bd.querys_db",
-        "description": "bd.querys_db",
-        "peekOfCode": "class QuerysDB:\n    TIME_OUT = 300\n    def __init__(self, oc_connection, pg_connection):\n        self.oc_connection = oc_connection\n        self.pg_connection = pg_connection\n    def select_oc(self, query, params={}, one=True):\n        try:\n            with concurrent.futures.ThreadPoolExecutor() as executor:\n                future = executor.submit(self._execute_query_oc, query, params, one)\n                logging.info(future)",
-        "detail": "bd.querys_db",
-        "documentation": {}
-    },
-    {
         "label": "RecordManager",
         "kind": 6,
         "importPath": "bd.record_manager",
@@ -323,12 +332,12 @@
         "documentation": {}
     },
     {
-        "label": "ReportProcess",
+        "label": "ExcelProcess",
         "kind": 6,
-        "importPath": "entity.report copy",
-        "description": "entity.report copy",
-        "peekOfCode": "class ReportProcess(RecordManager):\n    def __init__(self, oc_connection, pg_connection):\n        super().__init__(oc_connection, pg_connection)\n        self.pg_connection\n        self.oc_connection\n    import os\n    def execute(self):\n        while True:\n            try:\n                os.system('cls')  # cambiar a clear en linux",
-        "detail": "entity.report copy",
+        "importPath": "entity.excel",
+        "description": "entity.excel",
+        "peekOfCode": "class ExcelProcess(RecordManager):\n    CONTAINER_FOLDER = \"reports\"\n    def __init__(self, oc_connection, pg_connection):\n        super().__init__(oc_connection, pg_connection)\n        self.pg_connection = pg_connection  \n        self.oc_connection = oc_connection\n        self.oc_query = ExecutionQuery(self.oc_connection, self.pg_connection)\n    def _get_current_datetime(self):  # Agregar self como argumento\n        return datetime.now().strftime(\"%Y-%m-%d_%H-%M\")\n    def _build_file(self, name_file, format_report):",
+        "detail": "entity.excel",
         "documentation": {}
     },
     {
@@ -336,7 +345,7 @@
         "kind": 6,
         "importPath": "entity.report",
         "description": "entity.report",
-        "peekOfCode": "class ReportProcess(RecordManager):\n    def __init__(self, oc_connection, pg_connection, type_report):\n        super().__init__(oc_connection, pg_connection)\n        self.pg_connection = pg_connection  \n        self.oc_connection = oc_connection\n        self.type_report = type_report\n    def execute(self):\n        try:\n            if self.type_report == 1:\n                self._create_report_type_one()",
+        "peekOfCode": "class ReportProcess(RecordManager):\n    def __init__(self, oc_connection, pg_connection, type_report):\n        super().__init__(oc_connection, pg_connection)\n        self.pg_connection = pg_connection  \n        self.oc_connection = oc_connection\n        self.type_report = type_report\n        self.oc_query = ExecutionQuery(self.oc_connection, self.pg_connection)\n    def execute(self):\n        try:\n            if self.type_report == 1:",
         "detail": "entity.report",
         "documentation": {}
     },
