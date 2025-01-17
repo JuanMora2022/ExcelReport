@@ -23,18 +23,30 @@ class ExcelProcess(RecordManager):
         self.oc_connection = oc_connection
         self.oc_query = ExecutionQuery(self.oc_connection, self.pg_connection)
         
-    def _get_current_datetime(self):  # Agregar self como argumento
-        return datetime.now().strftime("%Y-%m-%d_%H-%M")
+    def _get_current_datetime(self):  
+        return datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        #return int(datetime.now().timestamp())
         
         
-    def _build_file(self, name_file, format_report):
+    def _build_file(self, name_file, format_report,report_contend,headers):
         try:
-            data = {
-                'Nombre': ['Ana', 'Juan', 'Luis'],
-                'Edad': [25, 30, 22],
-                'Ciudad': ['Madrid', 'Barcelona', 'Sevilla']
-            }
-          
+           
+            for i in report_contend:
+                list_values = i
+                
+            for header in headers:
+                list_headers = header
+            
+            
+            if isinstance(report_contend, tuple):
+         
+                data = [dict(zip(headers, report_contend))]
+            elif isinstance(report_contend, list):
+              
+                data = [dict(zip(headers, row)) for row in report_contend]
+           
+    
+         
             # Usar la instancia para llamar al método _get_current_datetime
             name_file_compound = f"{name_file}_{self._get_current_datetime()}"
 

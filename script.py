@@ -56,11 +56,8 @@ def main():
             report_process = ReportProcess(connection_oracle, connection_postgres,args.type_report)
             report_process.execute()
       
-        if args.type_report == 2:
-            print("Generar reporte 2")
-            
        
-        
+            
      
     except Exception as e:
         print(f"Error durante la ejecución: {e}")

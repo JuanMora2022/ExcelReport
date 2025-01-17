@@ -76,3 +76,35 @@ class ExecutionQuery:
         elif "select" in query:
             search_word = "from"
         return search_word
+    
+    
+    def get_column_headers_oc(self, query):
+        try:
+            cursor = self.oc_connection.connection.cursor()
+            cursor.execute(query)
+            
+            column_names = [desc[0] for desc in cursor.description]
+            cursor.close()
+            return column_names
+        except cx_Oracle.Error as e:
+            logging.error(f"Error al obtener los nombres de las columnas: {e}")
+            return None
+
+    def get_column_headers_pg(self, query):
+        try:
+            cursor = self.pg_connection.connection.cursor()
+            cursor.execute(query)
+            # Obtener los nombres de las columnas
+            column_names = [desc[0] for desc in cursor.description]
+            cursor.close()
+            return column_names
+        except psycopg2.Error as e:
+            logging.error(f"Error al obtener los nombres de las columnas: {e}")
+            return None
+
+    # Función para obtener los nombres de las columnas dependiendo de la base de datos
+    def get_column_headers(self, query, db_type="pg"):
+        if db_type == "oc":
+            return self.get_column_headers_oc(query)
+        else:
+            return self.get_column_headers_pg(query)
