@@ -81,9 +81,11 @@ class ReportProcess(RecordManager):
         records = self.oc_query.select_oc(queries_oc.get_novedad_fichas_nuevas(), (), False)
         return records if records else None  
 
-    def _execute_query_persona(self):
-        records = self.oc_query.select_oc(queries_oc.get_persona(), (), False)
-        return records if records else None  
+    def _execute_query_persona(self, num_doc_identidad):
+        query, params = queries_oc.get_persona(num_doc_identidad)
+        records = self.oc_query.select_oc(query, params, False)
+        return records if records else None
+
     
     def _create_report_type_one(self):
         report_process = ExcelProcess(self.oc_connection,self.pg_connection)
@@ -103,22 +105,26 @@ class ReportProcess(RecordManager):
          
     
     def _create_report_type_three(self):
-        report_process = ExcelProcess(self.oc_connection,self.pg_connection)
-       
-        novedad_persona= self._execute_query_persona()
-        if not novedad_persona: 
+        
+        num_doc_identidad = int(input("Ingrese el documento de identidad sin puntos ni comas: ")) 
+        
+        report_process = ExcelProcess(self.oc_connection, self.pg_connection)
+        
+        novedad_persona = self._execute_query_persona(num_doc_identidad)
+        if not novedad_persona:
             return "No se generó el reporte porque no hay datos de la persona"
         else:
-            column_headers_oc = self.oc_query.get_column_headers(queries_oc.get_persona(), db_type="oc")
-            report_process._build_file(name_file="Consulta_persona",format_report="xlsx",report_contend=novedad_persona,headers=column_headers_oc) 
+            column_headers_oc = self.oc_query.get_column_headers(queries_oc.get_persona(num_doc_identidad)[0], db_type="oc")
+            report_process._build_file(name_file="Consulta_persona", format_report="xlsx", report_contend=novedad_persona, headers=column_headers_oc)
             return "Reporte de persona generado"
+
         
   
     def _create_report_type_four(self):
         report_process = ExcelProcess(self.oc_connection, self.pg_connection)
         
         #fic_ids = [3144501,3142433,3141821]  # Lista de IDs de ejemplo
-        fic_ids_input = input("Ingrese los IDs de las fichas separados por comas: ")
+        fic_ids_input = input("Ingrese los Fic_ids de las fichas separados por comas: ")
         fic_ids = [int(fic_id.strip()) for fic_id in fic_ids_input.split(",") if fic_id.strip().isdigit()]
         
         if not fic_ids:
@@ -143,7 +149,7 @@ class ReportProcess(RecordManager):
                     fichas_completas.append(fichas_dict[fic_id])
                 else:
                     print(f"La ficha {fic_id} no se encontró información.")
-                    fichas_completas.append((fic_id, None, None, None, None, None, None,"No se encontró información de la ficha con respecto a la consulta"))
+                    fichas_completas.append((fic_id, None, None, None, None, None, None,"No se encontró información de la ficha "))
            
             #mostrar sólo info existente column_headers_fichas sin el append,  informacion_basica_fichas
             report_process._build_file(
@@ -157,7 +163,7 @@ class ReportProcess(RecordManager):
             
             
 
-
+    
         
        
         

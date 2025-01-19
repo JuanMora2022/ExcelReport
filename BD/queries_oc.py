@@ -10,8 +10,9 @@ def get_novedad_fichas_nuevas():
   select "FIC_ID","FIC_FCH_INICIALIZACION","FIC_FCH_FINALIZACION","FIC_FCH_REGISTRO","FIC_MOD_FORMACION","FIC_ESTADO" from "INTEGRACION"."V_FICHA_CARACTERIZACION_B" vfcb where "FIC_FCH_REGISTRO" >= TIMESTAMP '2024-11-30 00:00:00' and "FIC_ESTADO" in(1,6,7) and "FIC_MOD_FORMACION" <> 'P'
   """
   
-def get_persona():
-    return """ select * from INTEGRACION.V_PERSONA_B vpb where NUM_DOC_IDENTIDAD ='1004519830' """
+def get_persona(num_doc_identidad):
+    return """SELECT * FROM INTEGRACION.V_PERSONA_B WHERE NUM_DOC_IDENTIDAD = :num_doc_identidad""", {'num_doc_identidad': num_doc_identidad}
+
   
 def get_info_basic_data_records(fic_ids):
     placeholders = ", ".join([f":param{i}" for i in range(len(fic_ids))])  # Genera los placeholders con nombres

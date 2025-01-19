@@ -300,7 +300,7 @@
         "kind": 2,
         "importPath": "bd.queries_oc",
         "description": "bd.queries_oc",
-        "peekOfCode": "def get_record_oc():\n    return \"\"\"\n      select * from \"INTEGRACION\".\"V_FICHA_CARACTERIZACION_B\" vfcb \n      \"\"\"\ndef get_novedad_fichas_nuevas():\n  return \"\"\"\n  select \"FIC_ID\",\"FIC_FCH_INICIALIZACION\",\"FIC_FCH_FINALIZACION\",\"FIC_FCH_REGISTRO\",\"FIC_MOD_FORMACION\",\"FIC_ESTADO\" from \"INTEGRACION\".\"V_FICHA_CARACTERIZACION_B\" vfcb where \"FIC_FCH_REGISTRO\" >= TIMESTAMP '2024-11-30 00:00:00' and \"FIC_ESTADO\" in(1,6,7) and \"FIC_MOD_FORMACION\" <> 'P'\n  \"\"\"\ndef get_persona():\n    return \"\"\" select * from INTEGRACION.V_PERSONA_B vpb where NUM_DOC_IDENTIDAD ='1004519830' \"\"\"",
+        "peekOfCode": "def get_record_oc():\n    return \"\"\"\n      select * from \"INTEGRACION\".\"V_FICHA_CARACTERIZACION_B\" vfcb \n      \"\"\"\ndef get_novedad_fichas_nuevas():\n  return \"\"\"\n  select \"FIC_ID\",\"FIC_FCH_INICIALIZACION\",\"FIC_FCH_FINALIZACION\",\"FIC_FCH_REGISTRO\",\"FIC_MOD_FORMACION\",\"FIC_ESTADO\" from \"INTEGRACION\".\"V_FICHA_CARACTERIZACION_B\" vfcb where \"FIC_FCH_REGISTRO\" >= TIMESTAMP '2024-11-30 00:00:00' and \"FIC_ESTADO\" in(1,6,7) and \"FIC_MOD_FORMACION\" <> 'P'\n  \"\"\"\ndef get_persona(num_doc_identidad):\n    return \"\"\"SELECT * FROM INTEGRACION.V_PERSONA_B WHERE NUM_DOC_IDENTIDAD = :num_doc_identidad\"\"\", {'num_doc_identidad': num_doc_identidad}",
         "detail": "bd.queries_oc",
         "documentation": {}
     },
@@ -309,7 +309,7 @@
         "kind": 2,
         "importPath": "bd.queries_oc",
         "description": "bd.queries_oc",
-        "peekOfCode": "def get_novedad_fichas_nuevas():\n  return \"\"\"\n  select \"FIC_ID\",\"FIC_FCH_INICIALIZACION\",\"FIC_FCH_FINALIZACION\",\"FIC_FCH_REGISTRO\",\"FIC_MOD_FORMACION\",\"FIC_ESTADO\" from \"INTEGRACION\".\"V_FICHA_CARACTERIZACION_B\" vfcb where \"FIC_FCH_REGISTRO\" >= TIMESTAMP '2024-11-30 00:00:00' and \"FIC_ESTADO\" in(1,6,7) and \"FIC_MOD_FORMACION\" <> 'P'\n  \"\"\"\ndef get_persona():\n    return \"\"\" select * from INTEGRACION.V_PERSONA_B vpb where NUM_DOC_IDENTIDAD ='1004519830' \"\"\"\ndef get_info_basic_data_records(fic_ids):\n    placeholders = \", \".join([f\":param{i}\" for i in range(len(fic_ids))])  # Genera los placeholders con nombres\n    query = f\"\"\"\n        SELECT b.\"FIC_ID\", b.\"LMS_ID\", A.\"PRF_TIPO_PROGRAMA\", b.\"FIC_MOD_FORMACION\", \"FIC_FCH_INICIALIZACION\", ",
+        "peekOfCode": "def get_novedad_fichas_nuevas():\n  return \"\"\"\n  select \"FIC_ID\",\"FIC_FCH_INICIALIZACION\",\"FIC_FCH_FINALIZACION\",\"FIC_FCH_REGISTRO\",\"FIC_MOD_FORMACION\",\"FIC_ESTADO\" from \"INTEGRACION\".\"V_FICHA_CARACTERIZACION_B\" vfcb where \"FIC_FCH_REGISTRO\" >= TIMESTAMP '2024-11-30 00:00:00' and \"FIC_ESTADO\" in(1,6,7) and \"FIC_MOD_FORMACION\" <> 'P'\n  \"\"\"\ndef get_persona(num_doc_identidad):\n    return \"\"\"SELECT * FROM INTEGRACION.V_PERSONA_B WHERE NUM_DOC_IDENTIDAD = :num_doc_identidad\"\"\", {'num_doc_identidad': num_doc_identidad}\ndef get_info_basic_data_records(fic_ids):\n    placeholders = \", \".join([f\":param{i}\" for i in range(len(fic_ids))])  # Genera los placeholders con nombres\n    query = f\"\"\"\n        SELECT b.\"FIC_ID\", b.\"LMS_ID\", A.\"PRF_TIPO_PROGRAMA\", b.\"FIC_MOD_FORMACION\", \"FIC_FCH_INICIALIZACION\", ",
         "detail": "bd.queries_oc",
         "documentation": {}
     },
@@ -318,7 +318,7 @@
         "kind": 2,
         "importPath": "bd.queries_oc",
         "description": "bd.queries_oc",
-        "peekOfCode": "def get_persona():\n    return \"\"\" select * from INTEGRACION.V_PERSONA_B vpb where NUM_DOC_IDENTIDAD ='1004519830' \"\"\"\ndef get_info_basic_data_records(fic_ids):\n    placeholders = \", \".join([f\":param{i}\" for i in range(len(fic_ids))])  # Genera los placeholders con nombres\n    query = f\"\"\"\n        SELECT b.\"FIC_ID\", b.\"LMS_ID\", A.\"PRF_TIPO_PROGRAMA\", b.\"FIC_MOD_FORMACION\", \"FIC_FCH_INICIALIZACION\", \n               \"FIC_FCH_FINALIZACION\", \"FIC_ESTADO\" \n        FROM \"INTEGRACION\".\"V_PROGRAMA_FORMACION_B\" A \n        INNER JOIN \"INTEGRACION\".\"V_FICHA_CARACTERIZACION_B\" B \n        ON A.\"PRF_ID\" = B.\"PRF_ID\" ",
+        "peekOfCode": "def get_persona(num_doc_identidad):\n    return \"\"\"SELECT * FROM INTEGRACION.V_PERSONA_B WHERE NUM_DOC_IDENTIDAD = :num_doc_identidad\"\"\", {'num_doc_identidad': num_doc_identidad}\ndef get_info_basic_data_records(fic_ids):\n    placeholders = \", \".join([f\":param{i}\" for i in range(len(fic_ids))])  # Genera los placeholders con nombres\n    query = f\"\"\"\n        SELECT b.\"FIC_ID\", b.\"LMS_ID\", A.\"PRF_TIPO_PROGRAMA\", b.\"FIC_MOD_FORMACION\", \"FIC_FCH_INICIALIZACION\", \n               \"FIC_FCH_FINALIZACION\", \"FIC_ESTADO\" \n        FROM \"INTEGRACION\".\"V_PROGRAMA_FORMACION_B\" A \n        INNER JOIN \"INTEGRACION\".\"V_FICHA_CARACTERIZACION_B\" B \n        ON A.\"PRF_ID\" = B.\"PRF_ID\" ",
         "detail": "bd.queries_oc",
         "documentation": {}
     },

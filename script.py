@@ -48,7 +48,9 @@ def main():
         print(" ")
         print("+++++++++ Tipos de reportes (type_report) ++++++++++++")
         print("1.Prueba Reporte")
-        print("2.Novedad Fichas Nuevas ")
+        print("2.Reporte Novedad Fichas Nuevas ")
+        print("3.Consulta a persona")
+        print("4.Reporte Información Básica a personas")
         print("   ")
         
         
