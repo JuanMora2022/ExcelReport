@@ -65,6 +65,11 @@ class ExcelProcess(RecordManager):
         try:
             # Convertir los datos en un DataFrame
             df = pd.DataFrame(data)
+            
+            # Convertir todas las columnas datetime a naive (sin zona horaria)
+            for col in df.select_dtypes(include=['datetime64[ns, UTC]', 'datetime64[ns]']):
+                df[col] = df[col].dt.tz_localize(None)
+
 
             base_route = os.environ.get('PYTHONPATH', '.')
 

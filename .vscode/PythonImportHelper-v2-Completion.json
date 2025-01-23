@@ -336,7 +336,7 @@
         "kind": 2,
         "importPath": "bd.queries_pg",
         "description": "bd.queries_pg",
-        "peekOfCode": "def get_record_pg():\n    return \"\"\"\n      select * from \"INTEGRACION\".\"V_FICHA_CARACTERIZACION_B\" vfcb \n      \"\"\"",
+        "peekOfCode": "def get_record_pg(fic_ids):\n    placeholders = \",\".join([\"%s\"] * len(fic_ids))  \n    query = f'SELECT * FROM \"INTEGRACION\".\"V_FICHA_CARACTERIZACION_B\" vfcb WHERE \"FIC_ID\" IN ({placeholders})'\n    return query, fic_ids",
         "detail": "bd.queries_pg",
         "documentation": {}
     },
@@ -363,7 +363,7 @@
         "kind": 6,
         "importPath": "entity.report",
         "description": "entity.report",
-        "peekOfCode": "class ReportProcess(RecordManager):\n    def __init__(self, oc_connection, pg_connection, type_report):\n        super().__init__(oc_connection, pg_connection)\n        self.pg_connection = pg_connection  \n        self.oc_connection = oc_connection\n        self.type_report = type_report\n        self.oc_query = ExecutionQuery(self.oc_connection, self.pg_connection)\n    def _extract_headers(self, query):\n        try:\n            # Usa el método select_oc de ExecutionQuery para ejecutar la consulta",
+        "peekOfCode": "class ReportProcess(RecordManager):\n    def __init__(self, oc_connection, pg_connection, type_report):\n        super().__init__(oc_connection, pg_connection)\n        self.pg_connection = pg_connection  \n        self.oc_connection = oc_connection\n        self.type_report = type_report\n    def _extract_headers(self, query):\n        try:\n            # Usa el método select_oc de ExecutionQuery para ejecutar la consulta\n            cursor = self.select_oc(query, one=False)",
         "detail": "entity.report",
         "documentation": {}
     },

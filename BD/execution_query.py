@@ -36,7 +36,7 @@ class ExecutionQuery:
             logging.error(f"Error al consultar datos {table}: {e}")
             return None
     
-    def select_pg(self, query, params=None, one=True):
+    def select_pg(self, query, params, one=False):
         try:
             # params = list(params)
             cursor = self.pg_connection.connection.cursor()
@@ -90,11 +90,11 @@ class ExecutionQuery:
             logging.error(f"Error al obtener los nombres de las columnas: {e}")
             return None
 
-    def get_column_headers_pg(self, query):
+    
+    def get_column_headers_pg(self, query, params):
         try:
             cursor = self.pg_connection.connection.cursor()
-            cursor.execute(query)
-            # Obtener los nombres de las columnas
+            cursor.execute(query, params)  # <-- Pasando los parámetros correctamente
             column_names = [desc[0] for desc in cursor.description]
             cursor.close()
             return column_names
@@ -102,9 +102,11 @@ class ExecutionQuery:
             logging.error(f"Error al obtener los nombres de las columnas: {e}")
             return None
 
-    # Función para obtener los nombres de las columnas dependiendo de la base de datos
-    def get_column_headers(self, query, db_type="pg"):
+
+  
+            
+    def get_column_headers(self, query, params=None, db_type="pg"):
         if db_type == "oc":
             return self.get_column_headers_oc(query)
         else:
-            return self.get_column_headers_pg(query)
+            return self.get_column_headers_pg(query, params)  
