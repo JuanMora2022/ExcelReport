@@ -177,48 +177,57 @@ class ReportProcess(RecordManager):
         fic_ids_input = input("Ingrese los Fic_ids de las fichas separados por comas: ")
         fic_ids = [int(fic_id.strip()) for fic_id in fic_ids_input.split(",") if fic_id.strip().isdigit()]
         
+    
+        
         if not fic_ids:
             return "No se generó el reporte porque no se ingresaron fichas válidas. Verifique los datos ingresados."
         
         records_information = self._create_call_records_pg(fic_ids)
+        
+        print(f'records_information {records_information}')
         
         #return  records_information
         ##############################################################################
         if not records_information:
             return "No se encontraron datos de las fichas"
         
-        query, params = queries_pg.get_record_pg(fic_ids)
-        column_headers_records = self.get_column_headers(query, params=params, db_type="pg")
-
-
-        
-        if column_headers_records is None:
-            return "No se pudieron obtener los encabezados de las columnas."
-        
-        column_headers_records.append("Notas")
-        
-        fichas_dict = {row[0]: row for row in records_information}
-        
-        complete_records = []
-        success = True
-        
-        for fic_id in fic_ids:
-            if fic_id in fichas_dict:
-                complete_records.append(fichas_dict[fic_id])
-            else:
-                print(f"La ficha {fic_id} no se encontró información.")
-                success = False 
-        
-        if success:
-            report_process._build_file(
-                name_file="reporte de fichas postgres", 
-                format_report="xlsx", 
-                report_contend=complete_records, 
-                headers=column_headers_records
-            )
-            return "Reporte de fichas generado con éxito."
         else:
-            return "No se generó el reporte debido a que no se encontraron todas las fichas."
+            
+          
+        
+            query, params = queries_pg.get_record_pg(fic_ids)
+            column_headers_records = self.get_column_headers(query, params=params, db_type="pg")
+
+
+            
+            if column_headers_records is None:
+                return "No se pudieron obtener los encabezados de las columnas."
+            
+          
+            
+            fichas_dict = {row[0]: row for row in records_information}
+            
+            complete_records = []
+            success = True
+            
+            for fic_id in fic_ids:
+                if fic_id in fichas_dict:
+                    complete_records.append(fichas_dict[fic_id])
+                else:
+                  
+                    print(f"La ficha {fic_id} no se encontró información.")
+                    complete_records.append((fic_id,) + (None,) * 36 + ("No se encontró información de la ficha",))
+                    #success = False 
+            
+            if success:
+                report_process._build_file(
+                    name_file="reporte de fichas postgres", 
+                    format_report="xlsx", 
+                    report_contend=complete_records, 
+                    headers=column_headers_records
+                )
+                return "Reporte de fichas generado con éxito."
+           
 
 
             

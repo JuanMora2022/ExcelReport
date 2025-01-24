@@ -51,6 +51,7 @@ def main():
         print("2.Reporte Novedad Fichas Nuevas ")
         print("3.Consulta a persona")
         print("4.Reporte Información Básica a personas")
+        print("5.Reporte Fichas postgres")
         print("   ")
         
         
