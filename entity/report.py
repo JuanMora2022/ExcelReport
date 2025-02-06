@@ -51,12 +51,16 @@ class ReportProcess(RecordManager):
             #persona  
             elif self.type_report ==3:
                 result = self._create_report_type_three()
-                
+            #informacion basica de fichas   
             elif self.type_report ==4:
                 result = self._create_report_type_four()
-                
+            #informacion general fichas postgres  
             elif self.type_report ==5:
                 result = self._test_call_pg()
+                
+            elif self.type_report == 6:
+                result= self._create_general_report()
+                
                 
             else:
                 result="Tipo de reporte no válido."
@@ -67,6 +71,53 @@ class ReportProcess(RecordManager):
             print(f"Ocurrió una excepción al crear el reporte: {e}")
             import traceback
             traceback.print_exc()
+######################################################################################################   
+    def _execute_active_instructors_pg(self,params) : 
+            query, params = queries_pg.get_active_instructor(params)
+            records = self.select_pg(query, params, False)
+            return records if records else None  
+        
+    def _execute_active_instructors_sofia(self, fic_ids):
+        query, params = queries_oc.get_active_instructor(fic_ids)
+        records = self.select_oc(query, params, False)
+        return records if records else None
+    
+    def _apprentice_report_sofia(self, fic_id):
+        query, params = queries_oc.get_state_academic_records([fic_id])  
+        records = self.select_oc(query, params, False)
+
+        if not records:
+            return "No se encontraron registros académicos en Sofía"
+
+    
+        formatted_records = [f"{amount} en estado {state}" for _, state, amount in records]
+
+        return ", ".join(formatted_records) 
+
+               
+    def _execute_first_part_general_report(self,params):
+            query, params = queries_pg.general_report_first_part(params)
+            first_part = self.select_pg(query, params, False)
+            return first_part if first_part else None
+        
+    def _execute_number_aprentices_pg(self,params):
+        query, params = queries_pg.get_apprentices(params)
+        records = self.select_pg(query, params, False)
+        return records if records else None      
+            
+            
+    def _general_report_builder(self, fic_ids):
+        first_part = self._execute_first_part_general_report(fic_ids)
+        instructor_production = self._execute_active_instructors_pg(fic_ids)  
+        apprentices_postgres =self._execute_number_aprentices_pg(fic_ids)
+        instructors_sofia = self._execute_active_instructors_sofia(fic_ids)
+       
+        
+        return first_part, instructor_production,apprentices_postgres,instructors_sofia
+
+        
+        
+  ##################################################################################      
             
     def _create_call_records_pg(self,params):
                 
@@ -176,9 +227,6 @@ class ReportProcess(RecordManager):
         
         fic_ids_input = input("Ingrese los Fic_ids de las fichas separados por comas: ")
         fic_ids = [int(fic_id.strip()) for fic_id in fic_ids_input.split(",") if fic_id.strip().isdigit()]
-        
-    
-        
         if not fic_ids:
             return "No se generó el reporte porque no se ingresaron fichas válidas. Verifique los datos ingresados."
         
@@ -186,27 +234,15 @@ class ReportProcess(RecordManager):
         
         print(f'records_information {records_information}')
         
-        #return  records_information
-        ##############################################################################
         if not records_information:
             return "No se encontraron datos de las fichas"
         
         else:
-            
-          
-        
             query, params = queries_pg.get_record_pg(fic_ids)
             column_headers_records = self.get_column_headers(query, params=params, db_type="pg")
-
-
-            
             if column_headers_records is None:
                 return "No se pudieron obtener los encabezados de las columnas."
-            
-          
-            
             fichas_dict = {row[0]: row for row in records_information}
-            
             complete_records = []
             success = True
             
@@ -230,6 +266,77 @@ class ReportProcess(RecordManager):
            
 
 
+    #3145903
+    def _create_general_report(self):
+        report_process = ExcelProcess(self.oc_connection, self.pg_connection)
+        
+        use_default_fic_ids = True  # Cambia a False cuando quieras ingresar los valores manualmente
+
+        if use_default_fic_ids:
+            fic_ids = [3145903,3089232,3125865,3036645]  # Lista con un valor fijo para pruebas
+        else:
+            fic_ids_input = input("Ingrese los Fic_ids de las fichas separados por comas: ")
+            fic_ids = [int(fic_id.strip()) for fic_id in fic_ids_input.split(",") if fic_id.strip().isdigit()]
+        
+        
+        
+        
+        if not fic_ids:
+            return "No se generó el reporte porque no se ingresaron fichas válidas. Verifique los datos ingresados."
+        
+        
+        else:
+            first_part, instrutor_production,apprentices_postgres,instructors_sofia= self._general_report_builder(fic_ids)
+
+            reporte_dict = {}
+
+
+            for i, fic_id in enumerate(fic_ids):
+                academic_record_sofia = self._apprentice_report_sofia(fic_id)
+            
+                reporte_dict[fic_id] = {
+                    
+                    "Número de ficha": fic_id,
+                    "Programa de formación": first_part[i][1] if i < len(first_part) else "N/A",
+                    "Course ID": first_part[i][2] if i < len(first_part) else "N/A",
+                    "Fecha inicio de formación": first_part[i][3] if i < len(first_part) else "N/A",
+                    "Fecha fin de formación": first_part[i][4] if i < len(first_part) else "N/A",
+                    "Código programa formación": first_part[i][5] if i < len(first_part) else "N/A",
+                    "Número de instructores en Zajuna": instrutor_production[i][1] if i < len(instrutor_production) else "N/A",
+                    "Número de aprendices en Zajuna": apprentices_postgres[i][1] if i < len(apprentices_postgres) else "N/A",
+                    "Aprendices Ruta de aprendizaje": "",
+                    "Número de instructores en Sofía": instructors_sofia[i][1] if instructors_sofia and i < len(instructors_sofia) else "No se encontraron instructores vigentes",
+                    "Reporte de aprendices sofia":academic_record_sofia,
+                    "Notas": ""
+                }
+
+                
+            for ficha, datos in reporte_dict.items():
+                print(f"\nFicha: {ficha}")
+                for clave, valor in datos.items():
+                    print(f"{clave}: {valor}")
+
+            '''
+            # Obtener los encabezados del diccionario (clave del primer elemento)
+            encabezados = list(reporte_dict[next(iter(reporte_dict))].keys())
+
+            # Convertir diccionario en lista de listas para generar el reporte
+            reporte_completo = [list(data.values()) for data in reporte_dict.values()]
+            
+            report_process._build_file(
+                name_file="Seguimiento_fichas",
+                format_report="xlsx",
+                report_contend=reporte_completo,
+                headers=encabezados
+            )
+
+            return "Reporte general de fichas generado con éxito."
+            '''
+        
+  
+        
+ 
+      
             
             
        

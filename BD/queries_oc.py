@@ -24,9 +24,21 @@ def get_info_basic_data_records(fic_ids):
         ON A."PRF_ID" = B."PRF_ID" 
         WHERE "FIC_ID" IN ({placeholders})
     """
-    params = {f"param{i}": fic_id for i, fic_id in enumerate(fic_ids)}  # Asocia los parámetros con los valores
+    params = {f"param{i}": fic_id for i, fic_id in enumerate(fic_ids)}  
     return query, params
 
-  
-  
-        
+
+
+def get_active_instructor(fic_ids):
+  placeholders = ", ".join([f":param{i}" for i in range(len(fic_ids))])  
+  query = f"""SELECT "FIC_ID", COUNT("NIS_FUN_INSTRUCTOR") AS "INSTRUCTORES_VIGENTES" FROM "INTEGRACION"."V_INSTRUCTORXFICHA_B" vib WHERE "INF_ESTADO" = 'V' AND "FIC_ID" IN ({placeholders}) GROUP BY "FIC_ID" """
+  params = {f"param{i}": fic_id for i, fic_id in enumerate(fic_ids)} 
+  return query, params
+
+
+def get_state_academic_records(fic_ids):
+  placeholders = ", ".join([f":param{i}" for i in range(len(fic_ids))])  
+  query = f"""SELECT "FIC_ID", "RGA_ESTADO", COUNT(*) AS "Cantidad" FROM "INTEGRACION"."V_REGISTRO_ACADEMICO_B" vrab WHERE "FIC_ID" IN ({placeholders}) GROUP BY "FIC_ID", "RGA_ESTADO" ORDER BY "FIC_ID", "RGA_ESTADO" """
+  params = {f"param{i}": fic_id for i, fic_id in enumerate(fic_ids)}  
+  return query, params
+          

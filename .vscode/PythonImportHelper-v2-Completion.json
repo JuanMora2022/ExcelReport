@@ -332,11 +332,65 @@
         "documentation": {}
     },
     {
+        "label": "get_active_instructor",
+        "kind": 2,
+        "importPath": "bd.queries_oc",
+        "description": "bd.queries_oc",
+        "peekOfCode": "def get_active_instructor(fic_ids):\n  placeholders = \", \".join([f\":param{i}\" for i in range(len(fic_ids))])  \n  query = f\"\"\"SELECT \"FIC_ID\", COUNT(\"NIS_FUN_INSTRUCTOR\") AS \"INSTRUCTORES_VIGENTES\" FROM \"INTEGRACION\".\"V_INSTRUCTORXFICHA_B\" vib WHERE \"INF_ESTADO\" = 'V' AND \"FIC_ID\" IN ({placeholders}) GROUP BY \"FIC_ID\" \"\"\"\n  params = {f\"param{i}\": fic_id for i, fic_id in enumerate(fic_ids)} \n  return query, params\ndef get_state_academic_records(fic_ids):\n  placeholders = \", \".join([f\":param{i}\" for i in range(len(fic_ids))])  \n  query = f\"\"\"SELECT \"FIC_ID\", \"RGA_ESTADO\", COUNT(*) AS \"Cantidad\" FROM \"INTEGRACION\".\"V_REGISTRO_ACADEMICO_B\" vrab WHERE \"FIC_ID\" IN ({placeholders}) GROUP BY \"FIC_ID\", \"RGA_ESTADO\" ORDER BY \"FIC_ID\", \"RGA_ESTADO\" \"\"\"\n  params = {f\"param{i}\": fic_id for i, fic_id in enumerate(fic_ids)}  \n  return query, params",
+        "detail": "bd.queries_oc",
+        "documentation": {}
+    },
+    {
+        "label": "get_state_academic_records",
+        "kind": 2,
+        "importPath": "bd.queries_oc",
+        "description": "bd.queries_oc",
+        "peekOfCode": "def get_state_academic_records(fic_ids):\n  placeholders = \", \".join([f\":param{i}\" for i in range(len(fic_ids))])  \n  query = f\"\"\"SELECT \"FIC_ID\", \"RGA_ESTADO\", COUNT(*) AS \"Cantidad\" FROM \"INTEGRACION\".\"V_REGISTRO_ACADEMICO_B\" vrab WHERE \"FIC_ID\" IN ({placeholders}) GROUP BY \"FIC_ID\", \"RGA_ESTADO\" ORDER BY \"FIC_ID\", \"RGA_ESTADO\" \"\"\"\n  params = {f\"param{i}\": fic_id for i, fic_id in enumerate(fic_ids)}  \n  return query, params",
+        "detail": "bd.queries_oc",
+        "documentation": {}
+    },
+    {
         "label": "get_record_pg",
         "kind": 2,
         "importPath": "bd.queries_pg",
         "description": "bd.queries_pg",
-        "peekOfCode": "def get_record_pg(fic_ids):\n    placeholders = \",\".join([\"%s\"] * len(fic_ids))  \n    query = f'SELECT * FROM \"INTEGRACION\".\"V_FICHA_CARACTERIZACION_B\" vfcb WHERE \"FIC_ID\" IN ({placeholders})'\n    return query, fic_ids",
+        "peekOfCode": "def get_record_pg(fic_ids):\n    placeholders = \",\".join([\"%s\"] * len(fic_ids))  \n    query = f'SELECT * FROM \"INTEGRACION\".\"V_FICHA_CARACTERIZACION_B\" vfcb WHERE \"FIC_ID\" IN ({placeholders})'\n    return query, fic_ids\ndef general_report_first_part2(fic_ids):\n    placeholders = \",\".join([\"%s\"] * len(fic_ids))  \n    query = f'select A.\"FIC_ID\",B.\"PRF_DENOMINACION\",A.\"LMS_ID\",A.\"FIC_FCH_INICIALIZACION\",A.\"FIC_FCH_FINALIZACION\",B.\"PRF_CODIGO\" from \"INTEGRACION\".\"V_FICHA_CARACTERIZACION_B\" A  inner join \"INTEGRACION\".\"V_PROGRAMA_FORMACION_B\" B ON A.\"PRF_ID\" = B.\"PRF_ID\" and \"FIC_ID\" IN({placeholders})'\n    return query, fic_ids\ndef general_report_first_part(fic_ids):\n    placeholders = \",\".join([\"%s\"] * len(fic_ids))  ",
+        "detail": "bd.queries_pg",
+        "documentation": {}
+    },
+    {
+        "label": "general_report_first_part2",
+        "kind": 2,
+        "importPath": "bd.queries_pg",
+        "description": "bd.queries_pg",
+        "peekOfCode": "def general_report_first_part2(fic_ids):\n    placeholders = \",\".join([\"%s\"] * len(fic_ids))  \n    query = f'select A.\"FIC_ID\",B.\"PRF_DENOMINACION\",A.\"LMS_ID\",A.\"FIC_FCH_INICIALIZACION\",A.\"FIC_FCH_FINALIZACION\",B.\"PRF_CODIGO\" from \"INTEGRACION\".\"V_FICHA_CARACTERIZACION_B\" A  inner join \"INTEGRACION\".\"V_PROGRAMA_FORMACION_B\" B ON A.\"PRF_ID\" = B.\"PRF_ID\" and \"FIC_ID\" IN({placeholders})'\n    return query, fic_ids\ndef general_report_first_part(fic_ids):\n    placeholders = \",\".join([\"%s\"] * len(fic_ids))  \n    query = f'''\n        SELECT \n            A.\"FIC_ID\",\n            B.\"PRF_DENOMINACION\",",
+        "detail": "bd.queries_pg",
+        "documentation": {}
+    },
+    {
+        "label": "general_report_first_part",
+        "kind": 2,
+        "importPath": "bd.queries_pg",
+        "description": "bd.queries_pg",
+        "peekOfCode": "def general_report_first_part(fic_ids):\n    placeholders = \",\".join([\"%s\"] * len(fic_ids))  \n    query = f'''\n        SELECT \n            A.\"FIC_ID\",\n            B.\"PRF_DENOMINACION\",\n            A.\"LMS_ID\",\n            TO_CHAR(A.\"FIC_FCH_INICIALIZACION\", 'YYYY-MM-DD HH24:MI:SS'),\n            TO_CHAR(A.\"FIC_FCH_FINALIZACION\", 'YYYY-MM-DD HH24:MI:SS'),\n            B.\"PRF_CODIGO\" ",
+        "detail": "bd.queries_pg",
+        "documentation": {}
+    },
+    {
+        "label": "get_active_instructor",
+        "kind": 2,
+        "importPath": "bd.queries_pg",
+        "description": "bd.queries_pg",
+        "peekOfCode": "def get_active_instructor(fic_ids):\n    placeholders = \",\".join([\"%s\"] * len(fic_ids))  # Cambia %s por ?\n    query = f\"\"\"\n        SELECT \"FIC_ID\", COUNT(\"NIS_FUN_INSTRUCTOR\") AS \"INSTRUCTORES_VIGENTES\"\n        FROM \"INTEGRACION\".\"V_INSTRUCTORXFICHA_B\" vib\n        WHERE \"INF_ESTADO\" = 'V' AND \"FIC_ID\" IN ({placeholders})\n        GROUP BY \"FIC_ID\"\n    \"\"\"\n    return query, fic_ids  \ndef get_apprentices(fic_ids):",
+        "detail": "bd.queries_pg",
+        "documentation": {}
+    },
+    {
+        "label": "get_apprentices",
+        "kind": 2,
+        "importPath": "bd.queries_pg",
+        "description": "bd.queries_pg",
+        "peekOfCode": "def get_apprentices(fic_ids):\n    placeholders = \",\".join([\"%s\"] * len(fic_ids))  \n    query = f'SELECT \"FIC_ID\", COUNT(*) AS total_registros_academicos FROM \"INTEGRACION\".\"V_REGISTRO_ACADEMICO_B\"WHERE \"FIC_ID\" IN ({placeholders}) GROUP BY \"FIC_ID\"'\n    return query, fic_ids",
         "detail": "bd.queries_pg",
         "documentation": {}
     },

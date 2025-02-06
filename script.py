@@ -47,12 +47,20 @@ def main():
         os.system('cls')#clear para linux
         print(" ")
         print("+++++++++ Tipos de reportes (type_report) ++++++++++++")
+        print(" Consultas Oracle")
         print("1.Prueba Reporte")
         print("2.Reporte Novedad Fichas Nuevas ")
         print("3.Consulta a persona")
-        print("4.Reporte Información Básica a personas")
+        print("4.Reporte Información Básica a fichas ")
+        print("  ")
+        print("Consultas a postgres")
         print("5.Reporte Fichas postgres")
         print("   ")
+        time.sleep(3)
+        os.system('cls')
+        print("Reportes oficiales")
+        print("2.Reporte Novedad Fichas Nuevas ")
+        print("4.Reporte Información Básica a fichas ")
         
         
         if isinstance(args.type_report, int) or args.type_report =='':
