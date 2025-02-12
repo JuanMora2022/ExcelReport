@@ -11,6 +11,7 @@ import pdb
 import time
 import os
 import cx_Oracle
+import datetime
 
 
 class ReportProcess(RecordManager):
@@ -57,11 +58,17 @@ class ReportProcess(RecordManager):
             #informacion general fichas postgres  
             elif self.type_report ==5:
                 result = self._test_call_pg()
-                
+            #seguimiento de fichas "Reporte largo de catalina    
             elif self.type_report == 6:
                 result= self._create_general_report()
+            #fichas estado 13
+            elif self.type_report == 7:
+                result=self._create_report_records_state_thirteen()
                 
                 
+            elif self.type=8:
+                result=self._enrollment_verification()
+                   
             else:
                 result="Tipo de reporte no válido."
                 
@@ -71,6 +78,27 @@ class ReportProcess(RecordManager):
             print(f"Ocurrió una excepción al crear el reporte: {e}")
             import traceback
             traceback.print_exc()
+            
+    def _parse_date(self,date_str):
+        for fmt in ('%Y/%m/%d', '%Y-%m-%d'): 
+            try:
+                return datetime.datetime.strptime(date_str, fmt).strftime('%Y-%m-%d %H:%M:%S')
+            except ValueError:
+                continue
+        raise ValueError(f"Formato de fecha incorrecto: {date_str}. Usa YYYY/MM/DD o YYYY-MM-DD")
+
+            
+            
+  
+    
+    def _execute_get_records_without_academic(self, params):
+        query = queries_pg.get_records_without_academic() 
+        records = self.select_pg(query, params) 
+        return records if records else None
+
+       
+        
+        
 ######################################################################################################   
     def _execute_active_instructors_pg(self,params) : 
             query, params = queries_pg.get_active_instructor(params)
@@ -266,31 +294,23 @@ class ReportProcess(RecordManager):
            
 
 
-    #3145903
+ 
     def _create_general_report(self):
         report_process = ExcelProcess(self.oc_connection, self.pg_connection)
-        
-        use_default_fic_ids = True  # Cambia a False cuando quieras ingresar los valores manualmente
-
+        use_default_fic_ids = False  # False para ingresar datos Manuales-True para que los lea de una variable
         if use_default_fic_ids:
             fic_ids = [3145903,3089232,3125865,3036645]  # Lista con un valor fijo para pruebas
         else:
             fic_ids_input = input("Ingrese los Fic_ids de las fichas separados por comas: ")
             fic_ids = [int(fic_id.strip()) for fic_id in fic_ids_input.split(",") if fic_id.strip().isdigit()]
         
-        
-        
-        
         if not fic_ids:
             return "No se generó el reporte porque no se ingresaron fichas válidas. Verifique los datos ingresados."
-        
         
         else:
             first_part, instrutor_production,apprentices_postgres,instructors_sofia= self._general_report_builder(fic_ids)
 
             reporte_dict = {}
-
-
             for i, fic_id in enumerate(fic_ids):
                 academic_record_sofia = self._apprentice_report_sofia(fic_id)
             
@@ -310,13 +330,6 @@ class ReportProcess(RecordManager):
                     "Notas": ""
                 }
 
-                
-            for ficha, datos in reporte_dict.items():
-                print(f"\nFicha: {ficha}")
-                for clave, valor in datos.items():
-                    print(f"{clave}: {valor}")
-
-            '''
             # Obtener los encabezados del diccionario (clave del primer elemento)
             encabezados = list(reporte_dict[next(iter(reporte_dict))].keys())
 
@@ -331,13 +344,33 @@ class ReportProcess(RecordManager):
             )
 
             return "Reporte general de fichas generado con éxito."
-            '''
+     
         
   
+    def _create_report_records_state_thirteen(self):
+        
+        #pdb.set_trace()
+        manual = input("Desea ingresar fecha de inicio y fin  si (s)  no(n): ")
+        if manual.lower() == "s":
+            date_execute_one = input("Ingrese fecha Inicio (YYYY/MM/DD): ")
+            date_execute_two = input("Ingrese fecha fin (YYYY/MM/DD): ")
+            new_date_execute_one = self._parse_date(date_execute_one)
+            new_date_execute_two = self._parse_date(date_execute_two)
+           
+        else:
+            new_date_execute_one = '2025-01-01 00:00:00'
+            new_date_execute_two= '2025-02-28 00:00:00'
+            
+        params = (new_date_execute_one, new_date_execute_two) 
+        
+        result = self._execute_get_records_without_academic(params)
+        
+        print(result)
+        
         
  
-      
-            
+
+  
             
        
         

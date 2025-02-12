@@ -52,11 +52,10 @@ def main():
         print("2.Reporte Novedad Fichas Nuevas ")
         print("3.Consulta a persona")
         print("4.Reporte Información Básica a fichas ")
-        print("  ")
         print("Consultas a postgres")
         print("5.Reporte Fichas postgres")
-        print("   ")
-        time.sleep(3)
+  
+        time.sleep(2)
         os.system('cls')
         print("Reportes oficiales")
         print("2.Reporte Novedad Fichas Nuevas ")
