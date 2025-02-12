@@ -46,6 +46,10 @@ def get_apprentices(fic_ids):
     query = f'SELECT "FIC_ID", COUNT(*) AS total_registros_academicos FROM "INTEGRACION"."V_REGISTRO_ACADEMICO_B"WHERE "FIC_ID" IN ({placeholders}) GROUP BY "FIC_ID"'
     return query, fic_ids
     
+def enrolamientos(fic_ids):
+    placeholders = ",".join(["%s"] * len(fic_ids))  
+    query = f'SELECT "FIC_ID", COUNT(*) AS "NUMERO_ENROLLAMIENTOS" FROM "INTEGRACION"."USUARIO_LMS_ENROLL_C" ulec WHERE "FIC_ID" IN ({placeholders}) GROUP BY "FIC_ID" ORDER BY "FIC_ID" '
+    return query, fic_ids
 
 def get_records_without_academic():
     return """ SELECT 

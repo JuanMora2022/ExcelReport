@@ -66,7 +66,7 @@ class ReportProcess(RecordManager):
                 result=self._create_report_records_state_thirteen()
                 
                 
-            elif self.type=8:
+            elif self.type_report==8:
                 result=self._enrollment_verification()
                    
             else:
@@ -121,7 +121,22 @@ class ReportProcess(RecordManager):
         formatted_records = [f"{amount} en estado {state}" for _, state, amount in records]
 
         return ", ".join(formatted_records) 
-
+    
+    # ENROLAIENTOS #
+    
+    def _execute_enrollment_verification_complementaria(self,params):
+        query, params = queries_pg.enrolamientos(params)
+        records = self.select_pg(query, params, False)
+        return records if records else None      
+        
+        
+    def _execute_enrollment_verification(self,fic_ids):
+        enrollment_complementaria = self._execute_enrollment_verification_complementaria(fic_ids)
+        
+        return enrollment_complementaria
+        
+        
+    ########################################################
                
     def _execute_first_part_general_report(self,params):
             query, params = queries_pg.general_report_first_part(params)
@@ -370,7 +385,50 @@ class ReportProcess(RecordManager):
         
  
 
-  
+    def _enrollment_verification(self):
+        report_process = ExcelProcess(self.oc_connection, self.pg_connection)
+        use_default_fic_ids = False  # False para ingresar datos Manuales-True para que los lea de una variable
+        if use_default_fic_ids:
+            fic_ids = [3089232,3125865,3036645]  # Lista con un valor fijo para pruebas
+        else:
+            fic_ids_input = input("Ingrese los Fic_ids de las fichas separados por comas: ")
+            fic_ids = [int(fic_id.strip()) for fic_id in fic_ids_input.split(",") if fic_id.strip().isdigit()]
+        
+        if not fic_ids:
+            return "No se generó el reporte porque no se ingresaron fichas válidas. Verifique los datos ingresados."
+        
+        else:
+            first_part, instrutor_production,apprentices_postgres,instructors_sofia= self._general_report_builder(fic_ids)
+            
+            enrollment_complementaria = self._execute_enrollment_verification(fic_ids)
+
+            reporte_dict = {}
+            for i, fic_id in enumerate(fic_ids):
+                academic_record_sofia = self._apprentice_report_sofia(fic_id)
+            
+                reporte_dict[fic_id] = {
+                    
+                    "Número de ficha": fic_id,
+                    "Número de Reistros academicos": apprentices_postgres[i][1] if i < len(apprentices_postgres) else "N/A",
+                    "Numero de enrolamientos":enrollment_complementaria[i][1]
+                   
+                    
+                }
+            
+            # Obtener los encabezados del diccionario (clave del primer elemento)
+            encabezados = list(reporte_dict[next(iter(reporte_dict))].keys())
+
+            # Convertir diccionario en lista de listas para generar el reporte
+            reporte_completo = [list(data.values()) for data in reporte_dict.values()]
+            
+            report_process._build_file(
+                name_file="Enrolamientos",
+                format_report="xlsx",
+                report_contend=reporte_completo,
+                headers=encabezados
+            )
+
+            return "Reporte general de fichas generado con éxito."
             
        
         

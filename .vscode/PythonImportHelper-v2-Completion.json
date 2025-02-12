@@ -399,7 +399,16 @@
         "kind": 2,
         "importPath": "bd.queries_pg",
         "description": "bd.queries_pg",
-        "peekOfCode": "def get_apprentices(fic_ids):\n    placeholders = \",\".join([\"%s\"] * len(fic_ids))  \n    query = f'SELECT \"FIC_ID\", COUNT(*) AS total_registros_academicos FROM \"INTEGRACION\".\"V_REGISTRO_ACADEMICO_B\"WHERE \"FIC_ID\" IN ({placeholders}) GROUP BY \"FIC_ID\"'\n    return query, fic_ids\ndef get_records_without_academic():\n    return \"\"\" SELECT \n            A.\"FIC_ID\",\n            A.created_at,\n            A.\"FIC_ESTADO\",\n            A.\"FIC_FCH_INICIALIZACION\",",
+        "peekOfCode": "def get_apprentices(fic_ids):\n    placeholders = \",\".join([\"%s\"] * len(fic_ids))  \n    query = f'SELECT \"FIC_ID\", COUNT(*) AS total_registros_academicos FROM \"INTEGRACION\".\"V_REGISTRO_ACADEMICO_B\"WHERE \"FIC_ID\" IN ({placeholders}) GROUP BY \"FIC_ID\"'\n    return query, fic_ids\ndef enrolamientos(fic_ids):\n    placeholders = \",\".join([\"%s\"] * len(fic_ids))  \n    query = f'SELECT \"FIC_ID\", COUNT(*) AS \"NUMERO_ENROLLAMIENTOS\" FROM \"INTEGRACION\".\"USUARIO_LMS_ENROLL_C\" ulec WHERE \"FIC_ID\" IN ({placeholders}) GROUP BY \"FIC_ID\" ORDER BY \"FIC_ID\" '\n    return query, fic_ids\ndef get_records_without_academic():\n    return \"\"\" SELECT ",
+        "detail": "bd.queries_pg",
+        "documentation": {}
+    },
+    {
+        "label": "enrolamientos",
+        "kind": 2,
+        "importPath": "bd.queries_pg",
+        "description": "bd.queries_pg",
+        "peekOfCode": "def enrolamientos(fic_ids):\n    placeholders = \",\".join([\"%s\"] * len(fic_ids))  \n    query = f'SELECT \"FIC_ID\", COUNT(*) AS \"NUMERO_ENROLLAMIENTOS\" FROM \"INTEGRACION\".\"USUARIO_LMS_ENROLL_C\" ulec WHERE \"FIC_ID\" IN ({placeholders}) GROUP BY \"FIC_ID\" ORDER BY \"FIC_ID\" '\n    return query, fic_ids\ndef get_records_without_academic():\n    return \"\"\" SELECT \n            A.\"FIC_ID\",\n            A.created_at,\n            A.\"FIC_ESTADO\",\n            A.\"FIC_FCH_INICIALIZACION\",",
         "detail": "bd.queries_pg",
         "documentation": {}
     },
