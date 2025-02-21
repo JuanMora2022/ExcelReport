@@ -354,6 +354,7 @@ class ReportProcess(RecordManager):
         
   
     def _create_report_records_state_thirteen(self):
+        report_process = ExcelProcess(self.oc_connection, self.pg_connection)
         manual = "n"
         params =""
         #manual = input("Desea ingresar fecha de inicio y fin  si (s)
@@ -371,10 +372,39 @@ class ReportProcess(RecordManager):
     
         params = (new_date_execute_one, new_date_execute_two)
        
-
+        #se trae listado de fichas sin registros académicos en postgres
         result = self._execute_get_records_without_academic(params)
 
-        return result
+        # Construcción del diccionario de reporte
+        reporte_dict = {}
+        for ficha in result:
+            fic_id, fecha_creacion, fic_estado, fecha_inicializacion, registros_academicos = ficha
+            academic_record_sofia = self._apprentice_report_sofia(fic_id)
+            
+            reporte_dict[fic_id] = {
+                "fic_id": fic_id,
+                "fecha_creacion": fecha_creacion.strftime("%Y-%m-%d %H:%M:%S") if fecha_creacion else "N/A",
+                "fic_estado": fic_estado,
+                "fecha_inicializacion": fecha_inicializacion.strftime("%Y-%m-%d") if fecha_inicializacion else "N/A",
+                "registros_academicos_production": registros_academicos,
+                "registros_academicos_sofia":academic_record_sofia
+            }
+
+       
+        encabezados = list(reporte_dict[next(iter(reporte_dict))].keys()) if reporte_dict else []
+
+        
+        reporte_completo = [list(data.values()) for data in reporte_dict.values()]
+        
+      
+        report_process._build_file(
+            name_file="Reporte_Fichas_Sin_Registros_academicos_production",
+            format_report="xlsx",
+            report_contend=reporte_completo,
+            headers=encabezados
+        )
+
+        return reporte_dict
 
         
         
