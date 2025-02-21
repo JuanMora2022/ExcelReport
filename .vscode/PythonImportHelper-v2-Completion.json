@@ -399,7 +399,7 @@
         "kind": 2,
         "importPath": "bd.queries_pg",
         "description": "bd.queries_pg",
-        "peekOfCode": "def get_apprentices(fic_ids):\n    placeholders = \",\".join([\"%s\"] * len(fic_ids))  \n    query = f'SELECT \"FIC_ID\", COUNT(*) AS total_registros_academicos FROM \"INTEGRACION\".\"V_REGISTRO_ACADEMICO_B\"WHERE \"FIC_ID\" IN ({placeholders}) GROUP BY \"FIC_ID\"'\n    return query, fic_ids\ndef enrolamientos(fic_ids):\n    placeholders = \",\".join([\"%s\"] * len(fic_ids))  \n    query = f'SELECT \"FIC_ID\", COUNT(*) AS \"NUMERO_ENROLLAMIENTOS\" FROM \"INTEGRACION\".\"USUARIO_LMS_ENROLL_C\" ulec WHERE \"FIC_ID\" IN ({placeholders}) GROUP BY \"FIC_ID\" ORDER BY \"FIC_ID\" '\n    return query, fic_ids\ndef get_records_without_academic():\n    return \"\"\" SELECT ",
+        "peekOfCode": "def get_apprentices(fic_ids):\n    placeholders = \",\".join([\"%s\"] * len(fic_ids))  \n    query = f'SELECT \"FIC_ID\", COUNT(*) AS total_registros_academicos FROM \"INTEGRACION\".\"V_REGISTRO_ACADEMICO_B\"WHERE \"FIC_ID\" IN ({placeholders}) GROUP BY \"FIC_ID\"'\n    return query, fic_ids\ndef enrolamientos(fic_ids):\n    placeholders = \",\".join([\"%s\"] * len(fic_ids))  \n    query = f'SELECT \"FIC_ID\", COUNT(*) AS \"NUMERO_ENROLLAMIENTOS\" FROM \"INTEGRACION\".\"USUARIO_LMS_ENROLL_C\" ulec WHERE \"FIC_ID\" IN ({placeholders}) GROUP BY \"FIC_ID\" ORDER BY \"FIC_ID\" '\n    return query, fic_ids\ndef get_records_without_academic():\n    return \"\"\"SELECT A.\"FIC_ID\", A.created_at, A.\"FIC_ESTADO\", A.\"FIC_FCH_INICIALIZACION\", COALESCE(COUNT(B.\"RGA_ID\"), 0) AS REGISTROS_ACADEMICOS FROM \"INTEGRACION\".\"V_FICHA_CARACTERIZACION_B\" A LEFT JOIN \"INTEGRACION\".\"V_REGISTRO_ACADEMICO_B\" B ON A.\"FIC_ID\" = B.\"FIC_ID\" WHERE A.\"FIC_FCH_INICIALIZACION\" >= %s AND A.\"FIC_FCH_INICIALIZACION\" <= %s AND A.\"FIC_ESTADO\" <> 9 GROUP BY A.\"FIC_ID\", A.created_at, A.\"FIC_ESTADO\", A.\"FIC_FCH_INICIALIZACION\" HAVING COUNT(B.\"RGA_ID\") = 0\"\"\"",
         "detail": "bd.queries_pg",
         "documentation": {}
     },
@@ -408,7 +408,7 @@
         "kind": 2,
         "importPath": "bd.queries_pg",
         "description": "bd.queries_pg",
-        "peekOfCode": "def enrolamientos(fic_ids):\n    placeholders = \",\".join([\"%s\"] * len(fic_ids))  \n    query = f'SELECT \"FIC_ID\", COUNT(*) AS \"NUMERO_ENROLLAMIENTOS\" FROM \"INTEGRACION\".\"USUARIO_LMS_ENROLL_C\" ulec WHERE \"FIC_ID\" IN ({placeholders}) GROUP BY \"FIC_ID\" ORDER BY \"FIC_ID\" '\n    return query, fic_ids\ndef get_records_without_academic():\n    return \"\"\" SELECT \n            A.\"FIC_ID\",\n            A.created_at,\n            A.\"FIC_ESTADO\",\n            A.\"FIC_FCH_INICIALIZACION\",",
+        "peekOfCode": "def enrolamientos(fic_ids):\n    placeholders = \",\".join([\"%s\"] * len(fic_ids))  \n    query = f'SELECT \"FIC_ID\", COUNT(*) AS \"NUMERO_ENROLLAMIENTOS\" FROM \"INTEGRACION\".\"USUARIO_LMS_ENROLL_C\" ulec WHERE \"FIC_ID\" IN ({placeholders}) GROUP BY \"FIC_ID\" ORDER BY \"FIC_ID\" '\n    return query, fic_ids\ndef get_records_without_academic():\n    return \"\"\"SELECT A.\"FIC_ID\", A.created_at, A.\"FIC_ESTADO\", A.\"FIC_FCH_INICIALIZACION\", COALESCE(COUNT(B.\"RGA_ID\"), 0) AS REGISTROS_ACADEMICOS FROM \"INTEGRACION\".\"V_FICHA_CARACTERIZACION_B\" A LEFT JOIN \"INTEGRACION\".\"V_REGISTRO_ACADEMICO_B\" B ON A.\"FIC_ID\" = B.\"FIC_ID\" WHERE A.\"FIC_FCH_INICIALIZACION\" >= %s AND A.\"FIC_FCH_INICIALIZACION\" <= %s AND A.\"FIC_ESTADO\" <> 9 GROUP BY A.\"FIC_ID\", A.created_at, A.\"FIC_ESTADO\", A.\"FIC_FCH_INICIALIZACION\" HAVING COUNT(B.\"RGA_ID\") = 0\"\"\"",
         "detail": "bd.queries_pg",
         "documentation": {}
     },
@@ -417,7 +417,7 @@
         "kind": 2,
         "importPath": "bd.queries_pg",
         "description": "bd.queries_pg",
-        "peekOfCode": "def get_records_without_academic():\n    return \"\"\" SELECT \n            A.\"FIC_ID\",\n            A.created_at,\n            A.\"FIC_ESTADO\",\n            A.\"FIC_FCH_INICIALIZACION\",\n            COALESCE(COUNT(B.\"RGA_ID\"), 0) AS REGISTROS_ACADEMICOS\n        FROM \n            \"INTEGRACION\".\"V_FICHA_CARACTERIZACION_B\" A\n        LEFT JOIN ",
+        "peekOfCode": "def get_records_without_academic():\n    return \"\"\"SELECT A.\"FIC_ID\", A.created_at, A.\"FIC_ESTADO\", A.\"FIC_FCH_INICIALIZACION\", COALESCE(COUNT(B.\"RGA_ID\"), 0) AS REGISTROS_ACADEMICOS FROM \"INTEGRACION\".\"V_FICHA_CARACTERIZACION_B\" A LEFT JOIN \"INTEGRACION\".\"V_REGISTRO_ACADEMICO_B\" B ON A.\"FIC_ID\" = B.\"FIC_ID\" WHERE A.\"FIC_FCH_INICIALIZACION\" >= %s AND A.\"FIC_FCH_INICIALIZACION\" <= %s AND A.\"FIC_ESTADO\" <> 9 GROUP BY A.\"FIC_ID\", A.created_at, A.\"FIC_ESTADO\", A.\"FIC_FCH_INICIALIZACION\" HAVING COUNT(B.\"RGA_ID\") = 0\"\"\"",
         "detail": "bd.queries_pg",
         "documentation": {}
     },

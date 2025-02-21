@@ -55,11 +55,13 @@ def main():
         print("Consultas a postgres")
         print("5.Reporte Fichas postgres")
   
-        time.sleep(2)
+        #time.sleep(2)
         os.system('cls')
         print("Reportes oficiales")
         print("2.Reporte Novedad Fichas Nuevas ")
         print("4.Reporte Información Básica a fichas ")
+        print("8.emergencia enrolamientos ")
+        os.system('cls')
         
         
         if isinstance(args.type_report, int) or args.type_report =='':
