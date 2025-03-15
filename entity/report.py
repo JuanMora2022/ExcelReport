@@ -15,6 +15,8 @@ import datetime
 
 
 class ReportProcess(RecordManager):
+    
+    FOTMAT_REPORT = "csv"
     def __init__(self, oc_connection, pg_connection, type_report):
         super().__init__(oc_connection, pg_connection)
         self.pg_connection = pg_connection  
@@ -25,7 +27,7 @@ class ReportProcess(RecordManager):
         
     def _extract_headers(self, query):
         try:
-            # Usa el método select_oc de ExecutionQuery para ejecutar la consulta
+         
             cursor = self.select_oc(query, one=False)
             
             if cursor:  
@@ -61,7 +63,7 @@ class ReportProcess(RecordManager):
             #seguimiento de fichas "Reporte largo de catalina    
             elif self.type_report == 6:
                 result= self._create_general_report()
-            #fichas estado 13
+            #fichas sin registros academicos en postrges
             elif self.type_report == 7:
                 result=self._create_report_records_state_thirteen()
                 
@@ -113,20 +115,7 @@ class ReportProcess(RecordManager):
 
         return ", ".join(formatted_records) 
     
-    # ENROLAIENTOS #
-    
-    def _execute_enrollment_verification_complementaria(self,params):
-        query, params = queries_pg.enrolamientos(params)
-        records = self.select_pg(query, params, False)
-        return records if records else None      
-        
-        
-    def _execute_enrollment_verification(self,fic_ids):
-        enrollment_complementaria = self._execute_enrollment_verification_complementaria(fic_ids)
-        
-        return enrollment_complementaria
-        
-        
+      
     ########################################################
                
     def _execute_first_part_general_report(self,params):
@@ -193,7 +182,7 @@ class ReportProcess(RecordManager):
         else:
             column_headers_oc = self.get_column_headers(queries_oc.get_novedad_fichas_nuevas(), db_type="oc")
 
-            report_process._build_file(name_file="Novedad_Fichas_Nuevas",format_report="xlsx",report_contend=novedad_fichas_nuevas,headers=column_headers_oc) 
+            report_process._build_file(name_file="Novedad_Fichas_Nuevas",format_report=self.FOTMAT_REPORT,report_contend=novedad_fichas_nuevas,headers=column_headers_oc,subfolder="Novedad Fichas Nuevas") 
             return "reporte generado"
          
     
@@ -208,7 +197,7 @@ class ReportProcess(RecordManager):
             return "No se generó el reporte porque no hay datos de la persona"
         else:
             column_headers_oc = self.get_column_headers(queries_oc.get_persona(num_doc_identidad)[0], db_type="oc")
-            report_process._build_file(name_file="Consulta_persona", format_report="xlsx", report_contend=novedad_persona, headers=column_headers_oc)
+            report_process._build_file(name_file="Consulta_persona", format_report=self.FOTMAT_REPORT, report_contend=novedad_persona, headers=column_headers_oc,subfolder="Persona")
             return "Reporte de persona generado"
      
     #3144501,3142433,3141821
@@ -246,7 +235,7 @@ class ReportProcess(RecordManager):
             #mostrar sólo info existente column_headers_records sin el append,  informacion_basica_fichas
             report_process._build_file(
                 name_file="Información_básica_fichas", 
-                format_report="xlsx", 
+                format_report=self.FOTMAT_REPORT, 
                 report_contend=fichas_completas, 
                 headers=column_headers_records
             )
@@ -292,9 +281,10 @@ class ReportProcess(RecordManager):
             if success:
                 report_process._build_file(
                     name_file="reporte de fichas postgres", 
-                    format_report="xlsx", 
+                    format_report=self.FOTMAT_REPORT, 
                     report_contend=complete_records, 
-                    headers=column_headers_records
+                    headers=column_headers_records,
+                    subfolder="Información Básica de fichas"
                 )
                 return "Reporte de fichas generado con éxito."
            
@@ -344,9 +334,10 @@ class ReportProcess(RecordManager):
             
             report_process._build_file(
                 name_file="Seguimiento_fichas",
-                format_report="xlsx",
+                format_report=self.FOTMAT_REPORT,
                 report_contend=reporte_completo,
-                headers=encabezados
+                headers=encabezados,
+                subfolder="Seguimiento de Fichas Sofia-prpduction"
             )
 
             return "Reporte general de fichas generado con éxito."
@@ -399,9 +390,10 @@ class ReportProcess(RecordManager):
       
         report_process._build_file(
             name_file="Reporte_Fichas_Sin_Registros_academicos_production",
-            format_report="xlsx",
+            format_report=self.FOTMAT_REPORT,
             report_contend=reporte_completo,
-            headers=encabezados
+            headers=encabezados,
+            subfolder="Fichas sin registros académicos"
         )
 
         return reporte_dict

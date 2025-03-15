@@ -28,7 +28,7 @@ class ExcelProcess(RecordManager):
         #return int(datetime.now().timestamp())
         
         
-    def _build_file(self, name_file, format_report,report_contend,headers):
+    def _build_file(self, name_file, format_report,report_contend,headers,subfolder):
         try:
            
             for i in report_contend:
@@ -51,17 +51,17 @@ class ExcelProcess(RecordManager):
             name_file_compound = f"{name_file}_{self._get_current_datetime()}"
 
             if format_report == "xlsx":
-                file_path = self._save_report(name_file_compound, data, format_report)
+                file_path = self._save_report(name_file_compound, data, format_report,subfolder)
                 
             elif format_report == "csv":
-                file_path = self._save_report(name_file_compound, data, format_report)
+                file_path = self._save_report(name_file_compound, data, format_report,subfolder)
                 
             return f"Archivo generado correctamente: {file_path}"
                 
         except Exception as e:
             print("excepcion", e, traceback.format_exc())
         
-    def _save_report(self, name_file_compound, data, format_report):
+    def _save_report(self, name_file_compound, data, format_report,subfolder):
         try:
             # Convertir los datos en un DataFrame
             df = pd.DataFrame(data)
@@ -76,15 +76,18 @@ class ExcelProcess(RecordManager):
             # Construir la ruta para el archivo en la carpeta reports
             directorio = os.path.join(base_route, self.CONTAINER_FOLDER)
             os.makedirs(directorio, exist_ok=True)  # Crear la carpeta si no existe
+            
+            subdirectorio = os.path.join(directorio, subfolder)
+            os.makedirs(subdirectorio, exist_ok=True)
 
             # Crear la ruta completa del archivo según el tipo de reporte
             if format_report.lower() == "xlsx":
                 archivo = f"{name_file_compound}.xlsx"
-                ruta_archivo = os.path.join(directorio, archivo)
+                ruta_archivo = os.path.join(subdirectorio, archivo)
                 df.to_excel(ruta_archivo, index=False)
             elif format_report.lower() == "csv":
                 archivo = f"{name_file_compound}.csv"
-                ruta_archivo = os.path.join(directorio, archivo)
+                ruta_archivo = os.path.join(subdirectorio, archivo)
                 df.to_csv(ruta_archivo, index=False)
             else:
                 raise ValueError("Tipo de reporte no válido. Usa 'xlsx' o 'csv'.")
