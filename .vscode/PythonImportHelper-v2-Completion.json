@@ -161,6 +161,14 @@
         "documentation": {}
     },
     {
+        "label": "ExecutionQuery",
+        "importPath": "bd.execution_query",
+        "description": "bd.execution_query",
+        "isExtraImport": true,
+        "detail": "bd.execution_query",
+        "documentation": {}
+    },
+    {
         "label": "bd.queries_pg",
         "kind": 6,
         "isExtraImport": true,
@@ -176,6 +184,14 @@
         "importPath": "bd.queries_oc",
         "description": "bd.queries_oc",
         "detail": "bd.queries_oc",
+        "documentation": {}
+    },
+    {
+        "label": "RecordManager",
+        "importPath": "bd.record_manager",
+        "description": "bd.record_manager",
+        "isExtraImport": true,
+        "detail": "bd.record_manager",
         "documentation": {}
     },
     {
@@ -250,6 +266,14 @@
         "description": "entity.excel",
         "isExtraImport": true,
         "detail": "entity.excel",
+        "documentation": {}
+    },
+    {
+        "label": "ArchiveProcess",
+        "importPath": "entity.archive",
+        "description": "entity.archive",
+        "isExtraImport": true,
+        "detail": "entity.archive",
         "documentation": {}
     },
     {
@@ -354,7 +378,16 @@
         "kind": 2,
         "importPath": "bd.queries_oc",
         "description": "bd.queries_oc",
-        "peekOfCode": "def get_state_academic_records(fic_ids):\n  placeholders = \", \".join([f\":param{i}\" for i in range(len(fic_ids))])  \n  query = f\"\"\"SELECT \"FIC_ID\", \"RGA_ESTADO\", COUNT(*) AS \"Cantidad\" FROM \"INTEGRACION\".\"V_REGISTRO_ACADEMICO_B\" vrab WHERE \"FIC_ID\" IN ({placeholders}) GROUP BY \"FIC_ID\", \"RGA_ESTADO\" ORDER BY \"FIC_ID\", \"RGA_ESTADO\" \"\"\"\n  params = {f\"param{i}\": fic_id for i, fic_id in enumerate(fic_ids)}  \n  return query, params",
+        "peekOfCode": "def get_state_academic_records(fic_ids):\n  placeholders = \", \".join([f\":param{i}\" for i in range(len(fic_ids))])  \n  query = f\"\"\"SELECT \"FIC_ID\", \"RGA_ESTADO\", COUNT(*) AS \"Cantidad\" FROM \"INTEGRACION\".\"V_REGISTRO_ACADEMICO_B\" vrab WHERE \"FIC_ID\" IN ({placeholders}) GROUP BY \"FIC_ID\", \"RGA_ESTADO\" ORDER BY \"FIC_ID\", \"RGA_ESTADO\" \"\"\"\n  params = {f\"param{i}\": fic_id for i, fic_id in enumerate(fic_ids)}  \n  return query, params\ndef verificar_fichas(fic_ids):\n  placeholders = \", \".join([f\":param{i}\" for i in range(len(fic_ids))])  \n  query = f\"\"\" select \"FIC_ID\" from \"INTEGRACION\".\"V_FICHA_CARACTERIZACION_B\" vfcb where \"FIC_ID\" in({placeholders}) \"\"\"\n  params = {f\"param{i}\": fic_id for i, fic_id in enumerate(fic_ids)}  \n  return query, params",
+        "detail": "bd.queries_oc",
+        "documentation": {}
+    },
+    {
+        "label": "verificar_fichas",
+        "kind": 2,
+        "importPath": "bd.queries_oc",
+        "description": "bd.queries_oc",
+        "peekOfCode": "def verificar_fichas(fic_ids):\n  placeholders = \", \".join([f\":param{i}\" for i in range(len(fic_ids))])  \n  query = f\"\"\" select \"FIC_ID\" from \"INTEGRACION\".\"V_FICHA_CARACTERIZACION_B\" vfcb where \"FIC_ID\" in({placeholders}) \"\"\"\n  params = {f\"param{i}\": fic_id for i, fic_id in enumerate(fic_ids)}  \n  return query, params",
         "detail": "bd.queries_oc",
         "documentation": {}
     },
@@ -428,6 +461,15 @@
         "description": "bd.record_manager",
         "peekOfCode": "class RecordManager(ExecutionQuery):\n    def __init__(self, oc_connection, pg_connection):\n        super().__init__(oc_connection, pg_connection)\n        self.oc_connection = oc_connection\n        self.pg_connection = pg_connection\n    def _get_record_by_fic_id(self, query_select, ids):\n        record = self.select_pg()",
         "detail": "bd.record_manager",
+        "documentation": {}
+    },
+    {
+        "label": "ArchiveProcess",
+        "kind": 6,
+        "importPath": "entity.archive",
+        "description": "entity.archive",
+        "peekOfCode": "class ArchiveProcess(RecordManager):\n    READING_FILE_DIRECTORY = \"reading_files\"\n    def __init__(self, oc_connection, pg_connection):\n        super().__init__(oc_connection, pg_connection)\n        self.pg_connection = pg_connection  \n        self.oc_connection = oc_connection\n        self.oc_query = ExecutionQuery(self.oc_connection, self.pg_connection)\n    def _read_file(self,input_file):\n        base_route = os.environ.get('PYTHONPATH', '.')  \n        read_directory = os.path.join(base_route,self.READING_FILE_DIRECTORY)",
+        "detail": "entity.archive",
         "documentation": {}
     },
     {

@@ -3,6 +3,7 @@ import bd.queries_oc as queries_oc
 from bd.execution_query import ExecutionQuery
 from bd.record_manager import RecordManager
 from entity.excel import ExcelProcess
+from entity.archive import ArchiveProcess
 import logging
 import traceback
 from psycopg2 import sql
@@ -288,59 +289,71 @@ class ReportProcess(RecordManager):
                 )
                 return "Reporte de fichas generado con éxito."
            
-
-
- 
+   
+    def _verificar_fichas_oc(self,fic_ids):
+        query, params = queries_oc.verificar_fichas(fic_ids)
+        records = self.select_oc(query, params, False)
+        return records if records else False
+    
     def _create_general_report(self):
         report_process = ExcelProcess(self.oc_connection, self.pg_connection)
-        use_default_fic_ids = False  # False para ingresar datos Manuales-True para que los lea de una variable
-        if use_default_fic_ids:
-            fic_ids = [3145903,3089232,3125865,3036645]  # Lista con un valor fijo para pruebas
-        else:
-            fic_ids_input = input("Ingrese los Fic_ids de las fichas separados por comas: ")
-            fic_ids = [int(fic_id.strip()) for fic_id in fic_ids_input.split(",") if fic_id.strip().isdigit()]
-        
-        if not fic_ids:
+        archive_process = ArchiveProcess(self.oc_connection, self.pg_connection)
+        fic_ids = archive_process._read_file("prueba_lectura.txt")
+
+        if len(fic_ids) == 0:
             return "No se generó el reporte porque no se ingresaron fichas válidas. Verifique los datos ingresados."
+   
+        fichas_existentes = self._verificar_fichas_oc(fic_ids)
+       
+        fichas_existentes = [int(fic[0]) for fic in fichas_existentes]
         
-        else:
-            first_part, instrutor_production,apprentices_postgres,instructors_sofia= self._general_report_builder(fic_ids)
+        if len(fichas_existentes) == 0:
+            return "No se encontraron fichas en la base de datos. Verifique los datos ingresados."
+        
+        
+        first_part, instrutor_production, apprentices_postgres, instructors_sofia = self._general_report_builder(fic_ids)
 
-            reporte_dict = {}
-            for i, fic_id in enumerate(fic_ids):
-                academic_record_sofia = self._apprentice_report_sofia(fic_id)
+        reporte_dict = {}
+        for i, fic_id in enumerate(fichas_existentes):  
+            if fic_id not in fichas_existentes:
+                continue  
             
-                reporte_dict[fic_id] = {
-                    
-                    "Número de ficha": fic_id,
-                    "Programa de formación": first_part[i][1] if i < len(first_part) else "N/A",
-                    "Course ID": first_part[i][2] if i < len(first_part) else "N/A",
-                    "Fecha inicio de formación": first_part[i][3] if i < len(first_part) else "N/A",
-                    "Fecha fin de formación": first_part[i][4] if i < len(first_part) else "N/A",
-                    "Código programa formación": first_part[i][5] if i < len(first_part) else "N/A",
-                    "Número de instructores en Zajuna": instrutor_production[i][1] if i < len(instrutor_production) else "N/A",
-                    "Número de aprendices en Zajuna": apprentices_postgres[i][1] if i < len(apprentices_postgres) else "N/A",
-                    "Aprendices Ruta de aprendizaje": "",
-                    "Número de instructores en Sofía": instructors_sofia[i][1] if instructors_sofia and i < len(instructors_sofia) else "No se encontraron instructores vigentes",
-                    "Reporte de aprendices sofia":academic_record_sofia,
-                    "Notas": ""
-                }
+            academic_record_sofia = self._apprentice_report_sofia(fic_id)
 
-            # Obtener los encabezados del diccionario (clave del primer elemento)
-            encabezados = list(reporte_dict[next(iter(reporte_dict))].keys())
+            reporte_dict[fic_id] = {
+                "Número de ficha": fic_id,
+                "Programa de formación": first_part[i][1] if i < len(first_part) else "N/A",
+                "Course ID": first_part[i][2] if i < len(first_part) else "N/A",
+                "Fecha inicio de formación": first_part[i][3] if i < len(first_part) else "N/A",
+                "Fecha fin de formación": first_part[i][4] if i < len(first_part) else "N/A",
+                "Código programa formación": first_part[i][5] if i < len(first_part) else "N/A",
+                "Número de instructores en Zajuna": instrutor_production[i][1] if i < len(instrutor_production) else "N/A",
+                "Número de aprendices en Zajuna": apprentices_postgres[i][1] if i < len(apprentices_postgres) else "N/A",
+                "Aprendices Ruta de aprendizaje": "",
+                "Número de instructores en Sofía": instructors_sofia[i][1] if instructors_sofia and i < len(instructors_sofia) else "No se encontraron instructores vigentes",
+                "Reporte de aprendices sofia": academic_record_sofia,
+                "Notas": ""
+            }
 
-            # Convertir diccionario en lista de listas para generar el reporte
-            reporte_completo = [list(data.values()) for data in reporte_dict.values()]
-            
-            report_process._build_file(
-                name_file="Seguimiento_fichas",
-                format_report=self.FOTMAT_REPORT,
-                report_contend=reporte_completo,
-                headers=encabezados,
-                subfolder="Seguimiento de Fichas Sofia-prpduction"
-            )
+        if not reporte_dict:
+            return "No se generó el reporte porque ninguna ficha era válida."
 
-            return "Reporte general de fichas generado con éxito."
+        # Obtener los encabezados del diccionario (clave del primer elemento)
+        encabezados = list(reporte_dict[next(iter(reporte_dict))].keys())
+
+        # Convertir diccionario en lista de listas para generar el reporte
+        reporte_completo = [list(data.values()) for data in reporte_dict.values()]
+
+        report_process._build_file(
+            name_file="Seguimiento_fichas",
+            format_report=self.FOTMAT_REPORT,
+            report_contend=reporte_completo,
+            headers=encabezados,
+            subfolder="Seguimiento de Fichas Sofia-production"
+        )
+
+        return "Reporte general de fichas generado con éxito."
+
      
         
   
