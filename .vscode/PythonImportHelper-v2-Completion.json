@@ -211,6 +211,15 @@
         "documentation": {}
     },
     {
+        "label": "csv",
+        "kind": 6,
+        "isExtraImport": true,
+        "importPath": "csv",
+        "description": "csv",
+        "detail": "csv",
+        "documentation": {}
+    },
+    {
         "label": "datetime",
         "kind": 6,
         "isExtraImport": true,
@@ -486,7 +495,7 @@
         "kind": 6,
         "importPath": "entity.report",
         "description": "entity.report",
-        "peekOfCode": "class ReportProcess(RecordManager):\n    FOTMAT_REPORT = \"csv\"\n    def __init__(self, oc_connection, pg_connection, type_report):\n        super().__init__(oc_connection, pg_connection)\n        self.pg_connection = pg_connection  \n        self.oc_connection = oc_connection\n        self.type_report = type_report\n    def _extract_headers(self, query):\n        try:\n            cursor = self.select_oc(query, one=False)",
+        "peekOfCode": "class ReportProcess(RecordManager):\n    FOTMAT_REPORT = \"csv\"\n    GENERAL_REPORT_ARCHIVE = \"reporte_catalina.csv\"\n    def __init__(self, oc_connection, pg_connection, type_report):\n        super().__init__(oc_connection, pg_connection)\n        self.pg_connection = pg_connection  \n        self.oc_connection = oc_connection\n        self.type_report = type_report\n    def _extract_headers(self, query):\n        try:",
         "detail": "entity.report",
         "documentation": {}
     },

@@ -18,6 +18,9 @@ import datetime
 class ReportProcess(RecordManager):
     
     FOTMAT_REPORT = "csv"
+    
+    GENERAL_REPORT_ARCHIVE = "reporte_catalina.csv"
+    
     def __init__(self, oc_connection, pg_connection, type_report):
         super().__init__(oc_connection, pg_connection)
         self.pg_connection = pg_connection  
@@ -298,8 +301,8 @@ class ReportProcess(RecordManager):
     def _create_general_report(self):
         report_process = ExcelProcess(self.oc_connection, self.pg_connection)
         archive_process = ArchiveProcess(self.oc_connection, self.pg_connection)
-        fic_ids = archive_process._read_file("prueba_lectura.txt")
-
+        fic_ids = archive_process._read_file(self.GENERAL_REPORT_ARCHIVE)
+      
         if len(fic_ids) == 0:
             return "No se generó el reporte porque no se ingresaron fichas válidas. Verifique los datos ingresados."
    
