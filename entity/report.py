@@ -20,6 +20,9 @@ class ReportProcess(RecordManager):
     FOTMAT_REPORT = "csv"
     
     GENERAL_REPORT_ARCHIVE = "reporte_catalina.csv"
+    BASIC_RECORDS_INFORMATION_REPORT="consulta_fichas.csv"
+    FICHAS_POSTGRES ="reporte_catalina.csv"
+   
     
     def __init__(self, oc_connection, pg_connection, type_report):
         super().__init__(oc_connection, pg_connection)
@@ -82,17 +85,10 @@ class ReportProcess(RecordManager):
             import traceback
             traceback.print_exc()
             
-    def _parse_date(self,date_str):
-        for fmt in ('%Y/%m/%d', '%Y-%m-%d'): 
-            try:
-                return datetime.datetime.strptime(date_str, fmt).strftime('%Y-%m-%d %H:%M:%S')
-            except ValueError:
-                continue
-        raise ValueError(f"Formato de fecha incorrecto: {date_str}. Usa YYYY/MM/DD o YYYY-MM-DD")
 
         
-    def _execute_get_records_without_academic(self, params):
-        records = self.select_pg(queries_pg.get_records_without_academic(), params,False)
+    def _execute_get_records_without_academic(self):
+        records = self.select_pg(queries_pg.get_records_without_academic(),False)
         return records if records else None
 
 
@@ -207,41 +203,53 @@ class ReportProcess(RecordManager):
     #3144501,3142433,3141821
     def _create_report_type_four(self): #Información_básica_fichas
         report_process = ExcelProcess(self.oc_connection, self.pg_connection)
-        
-        #fic_ids = [3144501,3142433,3141821]  # Lista de IDs de ejemplo
-        fic_ids_input = input("Ingrese los Fic_ids de las fichas separados por comas: ")
-        fic_ids = [int(fic_id.strip()) for fic_id in fic_ids_input.split(",") if fic_id.strip().isdigit()]
-        
-        if not fic_ids:
+        ##########################
+
+        archive_process = ArchiveProcess(self.oc_connection, self.pg_connection)
+        fic_ids = archive_process._read_file(self.BASIC_RECORDS_INFORMATION_REPORT)
+     
+        if len(fic_ids) == 0:
             return "No se generó el reporte porque no se ingresaron fichas válidas. Verifique los datos ingresados."
+   
+        fichas_existentes = self._verificar_fichas_oc(fic_ids)
+    
+        fichas_existentes= [int(fic[0]) for fic in fichas_existentes]
         
-        informacion_basica_fichas = self._execute_info_basic_data_records(fic_ids)
+        if len(fichas_existentes) == 0:
+            return "No se encontraron fichas en la base de datos. Verifique los datos ingresados."
+        ################
+       
+        informacion_basica_fichas = self._execute_info_basic_data_records(fichas_existentes)
 
         if not informacion_basica_fichas:
             return "No se encontraron datos para generar el reporte."
         
         else:
             
-            column_headers_records = self.get_column_headers(queries_oc.get_info_basic_data_records(fic_ids)[0], db_type="oc")
+            column_headers_records = self.get_column_headers(queries_oc.get_info_basic_data_records(fichas_existentes)[0], db_type="oc")
             column_headers_records.append("Notas")  
             
             fichas_dict = {row[0]: row for row in informacion_basica_fichas}
             # Lista final con todas las fichas incluyendo las que no tienen información
             fichas_completas = []
-            
+        
             for fic_id in fic_ids:
                 if fic_id in fichas_dict:
                     fichas_completas.append(fichas_dict[fic_id])
                 else:
                     print(f"La ficha {fic_id} no se encontró información.")
                     fichas_completas.append((fic_id, None, None, None, None, None, None,"No se encontró información de la ficha "))
+                
+                #print("=>",fichas_completas)
+                
            
             #mostrar sólo info existente column_headers_records sin el append,  informacion_basica_fichas
             report_process._build_file(
                 name_file="Información_básica_fichas", 
                 format_report=self.FOTMAT_REPORT, 
                 report_contend=fichas_completas, 
-                headers=column_headers_records
+                headers=column_headers_records,
+                subfolder="Informacion_basica_fichas"
             )
             
             return "Reporte de fichas generado con éxito."
@@ -252,11 +260,21 @@ class ReportProcess(RecordManager):
     def _test_call_pg(self):
         report_process = ExcelProcess(self.oc_connection, self.pg_connection)
         
-        fic_ids_input = input("Ingrese los Fic_ids de las fichas separados por comas: ")
-        fic_ids = [int(fic_id.strip()) for fic_id in fic_ids_input.split(",") if fic_id.strip().isdigit()]
-        if not fic_ids:
+         ##########################
+
+        archive_process = ArchiveProcess(self.oc_connection, self.pg_connection)
+        fic_ids = archive_process._read_file(self.FICHAS_POSTGRES)
+     
+        if len(fic_ids) == 0:
             return "No se generó el reporte porque no se ingresaron fichas válidas. Verifique los datos ingresados."
+   
+        fichas_existentes = self._verificar_fichas_oc(fic_ids)
+    
+        fichas_existentes= [int(fic[0]) for fic in fichas_existentes]
         
+        if len(fichas_existentes) == 0:
+            return "No se encontraron fichas en la base de datos. Verifique los datos ingresados."
+        ################    
         records_information = self._create_call_records_pg(fic_ids)
         
         print(f'records_information {records_information}')
@@ -267,6 +285,7 @@ class ReportProcess(RecordManager):
         else:
             query, params = queries_pg.get_record_pg(fic_ids)
             column_headers_records = self.get_column_headers(query, params=params, db_type="pg")
+            column_headers_records.append("Notas") 
             if column_headers_records is None:
                 return "No se pudieron obtener los encabezados de las columnas."
             fichas_dict = {row[0]: row for row in records_information}
@@ -279,7 +298,7 @@ class ReportProcess(RecordManager):
                 else:
                   
                     print(f"La ficha {fic_id} no se encontró información.")
-                    complete_records.append((fic_id,) + (None,) * 36 + ("No se encontró información de la ficha",))
+                    complete_records.append((fic_id,) + (0,) * 36 + ("No se encontró información de la ficha",))
                     #success = False 
             
             if success:
@@ -362,25 +381,10 @@ class ReportProcess(RecordManager):
   
     def _create_report_records_state_thirteen(self):
         report_process = ExcelProcess(self.oc_connection, self.pg_connection)
-        manual = "n"
-        params =""
-        #manual = input("Desea ingresar fecha de inicio y fin  si (s)
-
-        if manual.lower() == "s":
-            date_execute_one = input("Ingrese fecha Inicio (YYYY/MM/DD): ")
-            date_execute_two = input("Ingrese fecha fin (YYYY/MM/DD): ")
-        else:
-            date_execute_one = '2025-01-01'  
-            date_execute_two = '2025-02-28'
-
-      
-        new_date_execute_one = self._parse_date(date_execute_one)
-        new_date_execute_two = self._parse_date(date_execute_two)
-    
-        params = (new_date_execute_one, new_date_execute_two)
+       
        
         #se trae listado de fichas sin registros académicos en postgres
-        result = self._execute_get_records_without_academic(params)
+        result = self._execute_get_records_without_academic()
 
         # Construcción del diccionario de reporte
         reporte_dict = {}
