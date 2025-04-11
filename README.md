@@ -1,7 +1,16 @@
 # ExcelReport
 
-type report 1 : es una prueba que muestra en consola el resultado de una consulta a oracle- se usa principalmente para ver si la conexión a oracle fue exitosa o no
+Reporte 4- información básica de fichas oracle
 
-type_report 2: Trae la novedad de las fichas nuevas de la última semana
+![1744377032106](image/README/1744377032106.png)
 
-type_report 3: trae la información de una persona con el número de documento
+Reporte 5- toda la información de las fichas postgres
+
+![1744377088847](image/README/1744377088847.png)
+
+Reporte 6 -reporte de catalina
+![1744377198021](image/README/1744377198021.png)
+
+Reporte 7-fichas sin registros académicos postgres
+
+![1744377412902](image/README/1744377412902.png)

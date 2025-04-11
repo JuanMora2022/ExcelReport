@@ -450,7 +450,7 @@
         "kind": 2,
         "importPath": "bd.queries_pg",
         "description": "bd.queries_pg",
-        "peekOfCode": "def enrolamientos(fic_ids):\n    placeholders = \",\".join([\"%s\"] * len(fic_ids))  \n    query = f'SELECT \"FIC_ID\", COUNT(*) AS \"NUMERO_ENROLLAMIENTOS\" FROM \"INTEGRACION\".\"USUARIO_LMS_ENROLL_C\" ulec WHERE \"FIC_ID\" IN ({placeholders}) GROUP BY \"FIC_ID\" ORDER BY \"FIC_ID\" '\n    return query, fic_ids\ndef get_records_without_academic():\n    return \"\"\"SELECT A.\"FIC_ID\", A.created_at, A.\"FIC_ESTADO\", A.\"FIC_FCH_INICIALIZACION\", COALESCE(COUNT(B.\"RGA_ID\"), 0) AS REGISTROS_ACADEMICOS FROM \"INTEGRACION\".\"V_FICHA_CARACTERIZACION_B\" A LEFT JOIN \"INTEGRACION\".\"V_REGISTRO_ACADEMICO_B\" B ON A.\"FIC_ID\" = B.\"FIC_ID\" WHERE A.\"FIC_FCH_INICIALIZACION\" >= '2025-01-01' AND A.\"FIC_FCH_INICIALIZACION\" <= CURRENT_DATE AND A.\"FIC_ESTADO\" <> 9 GROUP BY A.\"FIC_ID\", A.created_at, A.\"FIC_ESTADO\", A.\"FIC_FCH_INICIALIZACION\" HAVING COUNT(B.\"RGA_ID\") = 0\"\"\"",
+        "peekOfCode": "def enrolamientos(fic_ids):\n    placeholders = \",\".join([\"%s\"] * len(fic_ids))  \n    query = f'SELECT \"FIC_ID\", COUNT(*) AS \"NUMERO_ENROLLAMIENTOS\" FROM \"INTEGRACION\".\"USUARIO_LMS_ENROLL_C\" ulec WHERE \"FIC_ID\" IN ({placeholders}) GROUP BY \"FIC_ID\" ORDER BY \"FIC_ID\" '\n    return query, fic_ids\ndef get_records_without_academic():\n    return \"\"\"SELECT A.\"FIC_ID\", A.created_at, A.\"FIC_ESTADO\", A.\"FIC_FCH_INICIALIZACION\", COALESCE(COUNT(B.\"RGA_ID\"), 0) AS REGISTROS_ACADEMICOS FROM \"INTEGRACION\".\"V_FICHA_CARACTERIZACION_B\" A LEFT JOIN \"INTEGRACION\".\"V_REGISTRO_ACADEMICO_B\" B ON A.\"FIC_ID\" = B.\"FIC_ID\" WHERE A.\"FIC_FCH_INICIALIZACION\" >= '2025-01-01' AND A.\"FIC_FCH_INICIALIZACION\" <= CURRENT_DATE AND A.\"FIC_ESTADO\" <> 9 GROUP BY A.\"FIC_ID\", A.created_at, A.\"FIC_ESTADO\", A.\"FIC_FCH_INICIALIZACION\" HAVING COUNT(B.\"RGA_ID\") = 0\"\"\"\ndef verificar_fichas(fic_ids):\n    placeholders = \", \".join([\"%s\"] * len(fic_ids))  # %s para cada parámetro\n    query = f\"\"\"SELECT \"FIC_ID\" FROM \"INTEGRACION\".\"V_FICHA_CARACTERIZACION_B\" WHERE \"FIC_ID\" IN ({placeholders})\"\"\"\n    params = tuple(fic_ids)  # en orden, como tupla",
         "detail": "bd.queries_pg",
         "documentation": {}
     },
@@ -459,7 +459,16 @@
         "kind": 2,
         "importPath": "bd.queries_pg",
         "description": "bd.queries_pg",
-        "peekOfCode": "def get_records_without_academic():\n    return \"\"\"SELECT A.\"FIC_ID\", A.created_at, A.\"FIC_ESTADO\", A.\"FIC_FCH_INICIALIZACION\", COALESCE(COUNT(B.\"RGA_ID\"), 0) AS REGISTROS_ACADEMICOS FROM \"INTEGRACION\".\"V_FICHA_CARACTERIZACION_B\" A LEFT JOIN \"INTEGRACION\".\"V_REGISTRO_ACADEMICO_B\" B ON A.\"FIC_ID\" = B.\"FIC_ID\" WHERE A.\"FIC_FCH_INICIALIZACION\" >= '2025-01-01' AND A.\"FIC_FCH_INICIALIZACION\" <= CURRENT_DATE AND A.\"FIC_ESTADO\" <> 9 GROUP BY A.\"FIC_ID\", A.created_at, A.\"FIC_ESTADO\", A.\"FIC_FCH_INICIALIZACION\" HAVING COUNT(B.\"RGA_ID\") = 0\"\"\"",
+        "peekOfCode": "def get_records_without_academic():\n    return \"\"\"SELECT A.\"FIC_ID\", A.created_at, A.\"FIC_ESTADO\", A.\"FIC_FCH_INICIALIZACION\", COALESCE(COUNT(B.\"RGA_ID\"), 0) AS REGISTROS_ACADEMICOS FROM \"INTEGRACION\".\"V_FICHA_CARACTERIZACION_B\" A LEFT JOIN \"INTEGRACION\".\"V_REGISTRO_ACADEMICO_B\" B ON A.\"FIC_ID\" = B.\"FIC_ID\" WHERE A.\"FIC_FCH_INICIALIZACION\" >= '2025-01-01' AND A.\"FIC_FCH_INICIALIZACION\" <= CURRENT_DATE AND A.\"FIC_ESTADO\" <> 9 GROUP BY A.\"FIC_ID\", A.created_at, A.\"FIC_ESTADO\", A.\"FIC_FCH_INICIALIZACION\" HAVING COUNT(B.\"RGA_ID\") = 0\"\"\"\ndef verificar_fichas(fic_ids):\n    placeholders = \", \".join([\"%s\"] * len(fic_ids))  # %s para cada parámetro\n    query = f\"\"\"SELECT \"FIC_ID\" FROM \"INTEGRACION\".\"V_FICHA_CARACTERIZACION_B\" WHERE \"FIC_ID\" IN ({placeholders})\"\"\"\n    params = tuple(fic_ids)  # en orden, como tupla\n    return query, params",
+        "detail": "bd.queries_pg",
+        "documentation": {}
+    },
+    {
+        "label": "verificar_fichas",
+        "kind": 2,
+        "importPath": "bd.queries_pg",
+        "description": "bd.queries_pg",
+        "peekOfCode": "def verificar_fichas(fic_ids):\n    placeholders = \", \".join([\"%s\"] * len(fic_ids))  # %s para cada parámetro\n    query = f\"\"\"SELECT \"FIC_ID\" FROM \"INTEGRACION\".\"V_FICHA_CARACTERIZACION_B\" WHERE \"FIC_ID\" IN ({placeholders})\"\"\"\n    params = tuple(fic_ids)  # en orden, como tupla\n    return query, params",
         "detail": "bd.queries_pg",
         "documentation": {}
     },
@@ -477,7 +486,7 @@
         "kind": 6,
         "importPath": "entity.archive",
         "description": "entity.archive",
-        "peekOfCode": "class ArchiveProcess(RecordManager):\n    READING_FILE_DIRECTORY = \"reading_files\"\n    def __init__(self, oc_connection, pg_connection):\n        super().__init__(oc_connection, pg_connection)\n        self.pg_connection = pg_connection  \n        self.oc_connection = oc_connection\n        self.oc_query = ExecutionQuery(self.oc_connection, self.pg_connection)\n    def _read_file(self,input_file):\n        base_route = os.environ.get('PYTHONPATH', '.')  \n        read_directory = os.path.join(base_route,self.READING_FILE_DIRECTORY)",
+        "peekOfCode": "class ArchiveProcess(RecordManager):\n    READING_FILE_DIRECTORY = \"reading_files\"#carpeta dónde se almacenan los archivos de lectura\n    def __init__(self, oc_connection, pg_connection):\n        super().__init__(oc_connection, pg_connection)\n        self.pg_connection = pg_connection  \n        self.oc_connection = oc_connection\n        self.oc_query = ExecutionQuery(self.oc_connection, self.pg_connection)\n    def _read_file(self,input_file):\n        base_route = os.environ.get('PYTHONPATH', '.')  \n        read_directory = os.path.join(base_route,self.READING_FILE_DIRECTORY)",
         "detail": "entity.archive",
         "documentation": {}
     },
@@ -495,7 +504,7 @@
         "kind": 6,
         "importPath": "entity.report",
         "description": "entity.report",
-        "peekOfCode": "class ReportProcess(RecordManager):\n    FOTMAT_REPORT = \"csv\"\n    GENERAL_REPORT_ARCHIVE = \"reporte_catalina.csv\"\n    BASIC_RECORDS_INFORMATION_REPORT=\"consulta_fichas.csv\"\n    FICHAS_POSTGRES =\"reporte_catalina.csv\"\n    def __init__(self, oc_connection, pg_connection, type_report):\n        super().__init__(oc_connection, pg_connection)\n        self.pg_connection = pg_connection  \n        self.oc_connection = oc_connection\n        self.type_report = type_report",
+        "peekOfCode": "class ReportProcess(RecordManager):\n    FOTMAT_REPORT = \"csv\"\n    GENERAL_REPORT_ARCHIVE = \"SERVIDOR_PRUEBA_ORACLE_431_2 - Hoja 1.csv\"\n    BASIC_RECORDS_INFORMATION_REPORT=\"SERVIDOR_PRUEBA_ORACLE_431_2 - Hoja 1.csv\"\n    FICHAS_POSTGRES =\"SERVIDOR_PRUEBA_ORACLE.csv\"\n    def __init__(self, oc_connection, pg_connection, type_report):\n        super().__init__(oc_connection, pg_connection)\n        self.pg_connection = pg_connection  \n        self.oc_connection = oc_connection\n        self.type_report = type_report",
         "detail": "entity.report",
         "documentation": {}
     },
@@ -513,7 +522,16 @@
         "kind": 2,
         "importPath": "script",
         "description": "script",
-        "peekOfCode": "def parse_arguments():\n    parser = argparse.ArgumentParser()\n    parser.add_argument(\n        \"--type_report\",\n        type=int,\n        default=1,\n        help=\"Define el tipo de Reporte a crear\",\n    )\n    return parser.parse_args()\ndef main():",
+        "peekOfCode": "def parse_arguments():\n    parser = argparse.ArgumentParser()\n    parser.add_argument(\n        \"--type_report\",\n        type=int,\n        default=1,\n        help=\"Define el tipo de Reporte a crear\",\n    )\n    return parser.parse_args()\ndef clear_screen():",
+        "detail": "script",
+        "documentation": {}
+    },
+    {
+        "label": "clear_screen",
+        "kind": 2,
+        "importPath": "script",
+        "description": "script",
+        "peekOfCode": "def clear_screen():\n    os.system('cls' if os.name == 'nt' else 'clear')\ndef main():\n    start_time = time.time()\n    start_time_readable = datetime.fromtimestamp(start_time).strftime(\"%Y-%m-%d\")\n    try:\n        args = parse_arguments()\n        connection_postgres = ConnectionDB(\n                \"postgres\",\n                os.getenv(\"HOST_PG\"),",
         "detail": "script",
         "documentation": {}
     },

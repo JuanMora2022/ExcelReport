@@ -48,3 +48,5 @@ def verificar_fichas(fic_ids):
   query = f""" select "FIC_ID" from "INTEGRACION"."V_FICHA_CARACTERIZACION_B" vfcb where "FIC_ID" in({placeholders}) """
   params = {f"param{i}": fic_id for i, fic_id in enumerate(fic_ids)}  
   return query, params
+
+

@@ -53,3 +53,10 @@ def enrolamientos(fic_ids):
 
 def get_records_without_academic():
     return """SELECT A."FIC_ID", A.created_at, A."FIC_ESTADO", A."FIC_FCH_INICIALIZACION", COALESCE(COUNT(B."RGA_ID"), 0) AS REGISTROS_ACADEMICOS FROM "INTEGRACION"."V_FICHA_CARACTERIZACION_B" A LEFT JOIN "INTEGRACION"."V_REGISTRO_ACADEMICO_B" B ON A."FIC_ID" = B."FIC_ID" WHERE A."FIC_FCH_INICIALIZACION" >= '2025-01-01' AND A."FIC_FCH_INICIALIZACION" <= CURRENT_DATE AND A."FIC_ESTADO" <> 9 GROUP BY A."FIC_ID", A.created_at, A."FIC_ESTADO", A."FIC_FCH_INICIALIZACION" HAVING COUNT(B."RGA_ID") = 0"""
+
+
+def verificar_fichas(fic_ids):
+    placeholders = ", ".join(["%s"] * len(fic_ids))  # %s para cada parámetro
+    query = f"""SELECT "FIC_ID" FROM "INTEGRACION"."V_FICHA_CARACTERIZACION_B" WHERE "FIC_ID" IN ({placeholders})"""
+    params = tuple(fic_ids)  # en orden, como tupla
+    return query, params

@@ -19,11 +19,11 @@ class ReportProcess(RecordManager):
     
     FOTMAT_REPORT = "csv"
     
-    GENERAL_REPORT_ARCHIVE = "reporte_catalina.csv"
-    BASIC_RECORDS_INFORMATION_REPORT="consulta_fichas.csv"
-    FICHAS_POSTGRES ="reporte_catalina.csv"
-   
+    GENERAL_REPORT_ARCHIVE = "SERVIDOR_PRUEBA_ORACLE_431_2 - Hoja 1.csv"
+    BASIC_RECORDS_INFORMATION_REPORT="SERVIDOR_PRUEBA_ORACLE_431_2 - Hoja 1.csv"
+    FICHAS_POSTGRES ="SERVIDOR_PRUEBA_ORACLE.csv"
     
+
     def __init__(self, oc_connection, pg_connection, type_report):
         super().__init__(oc_connection, pg_connection)
         self.pg_connection = pg_connection  
@@ -143,11 +143,10 @@ class ReportProcess(RecordManager):
   ##################################################################################      
             
     def _create_call_records_pg(self,params):
-                
-                query, params = queries_pg.get_record_pg(params)
-                records = self.select_pg(query, params, False)
+        query, params = queries_pg.get_record_pg(params)
+        records = self.select_pg(query, params, False)
 
-                return records if records else None
+        return records if records else None
             
     
     def _execute_info_basic_data_records(self, fic_ids):
@@ -188,7 +187,12 @@ class ReportProcess(RecordManager):
     
     def _create_report_type_three(self): #Consulta_persona
         
-        num_doc_identidad = int(input("Ingrese el documento de identidad sin puntos ni comas: ")) 
+        num_doc_input = input("Ingrese el documento de identidad sin puntos ni comas: ").strip()
+        
+        if not num_doc_input.isdigit():
+            return "El documento ingresado no es válido. Debe contener solo números."
+        
+        num_doc_identidad = num_doc_input 
         
         report_process = ExcelProcess(self.oc_connection, self.pg_connection)
         
@@ -207,77 +211,97 @@ class ReportProcess(RecordManager):
 
         archive_process = ArchiveProcess(self.oc_connection, self.pg_connection)
         fic_ids = archive_process._read_file(self.BASIC_RECORDS_INFORMATION_REPORT)
-     
-        if len(fic_ids) == 0:
-            return "No se generó el reporte porque no se ingresaron fichas válidas. Verifique los datos ingresados."
-   
+        
+        if fic_ids is None:
+             return "El archivo no existe. Verifique la ruta o cargue el archivo primero."
+        
         fichas_existentes = self._verificar_fichas_oc(fic_ids)
-    
+        #print(f'fichas_existentes {fichas_existentes}')
+        
+        if fichas_existentes == False:
+            return "No se encontraron fichas en la base de datos. Verifique los datos ingresados."
+
         fichas_existentes= [int(fic[0]) for fic in fichas_existentes]
         
-        if len(fichas_existentes) == 0:
-            return "No se encontraron fichas en la base de datos. Verifique los datos ingresados."
+        
         ################
        
         informacion_basica_fichas = self._execute_info_basic_data_records(fichas_existentes)
+        #print(f'informacion_basica_fichas {informacion_basica_fichas}')
 
         if not informacion_basica_fichas:
             return "No se encontraron datos para generar el reporte."
         
         else:
             
-            column_headers_records = self.get_column_headers(queries_oc.get_info_basic_data_records(fichas_existentes)[0], db_type="oc")
-            column_headers_records.append("Notas")  
-            
+            #column_headers_records = self.get_column_headers(queries_oc.get_info_basic_data_records(fichas_existentes)[0], db_type="oc")
+            #column_headers_records.append("Notas") 
+            column_headers_records=['FIC_ID', 'LMS_ID', 'PRF_TIPO_PROGRAMA', 'FIC_MOD_FORMACION', 'FIC_FCH_INICIALIZACION', 'FIC_FCH_FINALIZACION', 'FIC_ESTADO']
+  
             fichas_dict = {row[0]: row for row in informacion_basica_fichas}
-            # Lista final con todas las fichas incluyendo las que no tienen información
+      
             fichas_completas = []
         
             for fic_id in fic_ids:
-                if fic_id in fichas_dict:
-                    fichas_completas.append(fichas_dict[fic_id])
+                try:
+                    fic_id_int = int(fic_id)
+                except ValueError:
+                    print(f"Ficha inválida (no se puede convertir a entero): {fic_id}")
+                    continue
+
+                if fic_id_int in fichas_dict:
+                    fichas_completas.append(fichas_dict[fic_id_int])
                 else:
-                    print(f"La ficha {fic_id} no se encontró información.")
-                    fichas_completas.append((fic_id, None, None, None, None, None, None,"No se encontró información de la ficha "))
-                
-                #print("=>",fichas_completas)
-                
-           
-            #mostrar sólo info existente column_headers_records sin el append,  informacion_basica_fichas
-            report_process._build_file(
-                name_file="Información_básica_fichas", 
-                format_report=self.FOTMAT_REPORT, 
-                report_contend=fichas_completas, 
-                headers=column_headers_records,
-                subfolder="Informacion_basica_fichas"
-            )
+                    print(f"La ficha {fic_id_int} no se encontró información para la consulta ejecutada.")
+
             
-            return "Reporte de fichas generado con éxito."
-          
+                
+            if column_headers_records:
+                #mostrar sólo info existente column_headers_records sin el append,  informacion_basica_fichas
+                report_process._build_file(
+                    name_file="Información_básica_fichas", 
+                    format_report=self.FOTMAT_REPORT, 
+                    report_contend=informacion_basica_fichas, 
+                    headers=column_headers_records,
+                    subfolder="Informacion_basica_fichas"
+                )
+                
+                return "Reporte de fichas generado con éxito."
+            else:
+                return "no se encotntraron encabezados"
+        
+      
           
         
-    #    3146093,3145907,3145903
+ 
     def _test_call_pg(self):
         report_process = ExcelProcess(self.oc_connection, self.pg_connection)
-        
-         ##########################
+    
 
         archive_process = ArchiveProcess(self.oc_connection, self.pg_connection)
         fic_ids = archive_process._read_file(self.FICHAS_POSTGRES)
+        
+        if fic_ids is None:
+            return "El archivo no existe. Verifique la ruta o cargue el archivo primero."
      
         if len(fic_ids) == 0:
             return "No se generó el reporte porque no se ingresaron fichas válidas. Verifique los datos ingresados."
    
-        fichas_existentes = self._verificar_fichas_oc(fic_ids)
+   #################################################################
+        fichas_existentes = self._verificar_fichas_pg(fic_ids)
+        
+        #print(f'=> {fichas_existentes}')
+        if not fichas_existentes:
+            return print("No se encontraron fichas en oracle")
     
         fichas_existentes= [int(fic[0]) for fic in fichas_existentes]
         
         if len(fichas_existentes) == 0:
             return "No se encontraron fichas en la base de datos. Verifique los datos ingresados."
-        ################    
+    ########################################################################
         records_information = self._create_call_records_pg(fic_ids)
         
-        print(f'records_information {records_information}')
+       # print(f'records_information {records_information}')
         
         if not records_information:
             return "No se encontraron datos de las fichas"
@@ -293,21 +317,25 @@ class ReportProcess(RecordManager):
             success = True
             
             for fic_id in fic_ids:
-                if fic_id in fichas_dict:
-                    complete_records.append(fichas_dict[fic_id])
+                try:
+                    fic_id_int = int(fic_id)
+                except ValueError:
+                    print(f"Ficha inválida (no se puede convertir a entero): {fic_id}")
+                    continue
+
+                if fic_id_int in fichas_dict:
+                    complete_records.append(fichas_dict[fic_id_int])
                 else:
-                  
-                    print(f"La ficha {fic_id} no se encontró información.")
-                    complete_records.append((fic_id,) + (0,) * 36 + ("No se encontró información de la ficha",))
-                    #success = False 
+                    print(f"La ficha {fic_id_int} no se encontró información.")
+
             
             if success:
                 report_process._build_file(
                     name_file="reporte de fichas postgres", 
                     format_report=self.FOTMAT_REPORT, 
-                    report_contend=complete_records, 
+                    report_contend=records_information, 
                     headers=column_headers_records,
-                    subfolder="Información Básica de fichas"
+                    subfolder="reporte fichas postgres"
                 )
                 return "Reporte de fichas generado con éxito."
            
@@ -317,10 +345,18 @@ class ReportProcess(RecordManager):
         records = self.select_oc(query, params, False)
         return records if records else False
     
+    def _verificar_fichas_pg(self,fic_ids):
+        query, params = queries_pg.verificar_fichas(fic_ids)
+        records = self.select_pg(query, params, False)
+        return records if records else False
+    
     def _create_general_report(self):
         report_process = ExcelProcess(self.oc_connection, self.pg_connection)
         archive_process = ArchiveProcess(self.oc_connection, self.pg_connection)
         fic_ids = archive_process._read_file(self.GENERAL_REPORT_ARCHIVE)
+        
+        if fic_ids is None:
+            return "El archivo no existe. Verifique la ruta o cargue el archivo primero."
       
         if len(fic_ids) == 0:
             return "No se generó el reporte porque no se ingresaron fichas válidas. Verifique los datos ingresados."
@@ -416,7 +452,7 @@ class ReportProcess(RecordManager):
             subfolder="Fichas sin registros académicos"
         )
 
-        return reporte_dict
+        return f"reporte 7 generado con éxito"
 
         
         

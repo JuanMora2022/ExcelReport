@@ -9,7 +9,7 @@ import csv
 class ArchiveProcess(RecordManager):
     
   
-    READING_FILE_DIRECTORY = "reading_files"
+    READING_FILE_DIRECTORY = "reading_files"#carpeta dónde se almacenan los archivos de lectura
     
     def __init__(self, oc_connection, pg_connection):
         super().__init__(oc_connection, pg_connection)
@@ -36,11 +36,17 @@ class ArchiveProcess(RecordManager):
             os.makedirs(read_directory, exist_ok=True)
 
             path_file_read = os.path.join(read_directory, input_file)
+            
+            if not os.path.isfile(path_file_read):
+                print(f"Archivo no encontrado: {path_file_read}")
+                return None
+
+     
 
             # Si el archivo no existe, crearlo vacío
-            if not os.path.exists(path_file_read):
+            ''' if not os.path.exists(path_file_read):
                 with open(path_file_read, 'w', encoding="utf-8") as file:
-                    file.write("")
+                    file.write("")'''
 
             try:
                 # Verificar si es TXT o CSV
@@ -53,6 +59,8 @@ class ArchiveProcess(RecordManager):
                         lector_csv = csv.DictReader(archivo)  # Usamos DictReader para acceder por nombre de columna
                         if "FIC_ID" in lector_csv.fieldnames:  # Verificar que la columna exista
                             datos = [fila["FIC_ID"] for fila in lector_csv if fila["FIC_ID"].strip()]
+                            
+                            
                         else:
                             return "El archivo CSV no contiene la columna 'FIC_ID'."
                 

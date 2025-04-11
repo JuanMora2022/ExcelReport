@@ -21,6 +21,9 @@ def parse_arguments():
     )
     return parser.parse_args()
 
+def clear_screen():
+    os.system('cls' if os.name == 'nt' else 'clear')
+
 def main():
     start_time = time.time()
     start_time_readable = datetime.fromtimestamp(start_time).strftime("%Y-%m-%d")
@@ -44,7 +47,7 @@ def main():
             os.getenv("PORT_ORCL"),
         )            
         connection_oracle.connect()
-        os.system('cls')#clear para linux
+        clear_screen()
         print(" ")
         print("+++++++++ Tipos de reportes (type_report) ++++++++++++")
         print(" Consultas Oracle")
@@ -56,12 +59,13 @@ def main():
         print("5.Reporte Fichas postgres")
   
         #time.sleep(2)
-        os.system('cls')
+        clear_screen()
         print("Reportes oficiales")
         print("2.Reporte Novedad Fichas Nuevas ")
         print("4.Reporte Información Básica a fichas ")
         print("8.emergencia enrolamientos ")
-        os.system('cls')
+        clear_screen()
+
         
         
         if isinstance(args.type_report, int) or args.type_report =='':
