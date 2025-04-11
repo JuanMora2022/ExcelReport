@@ -504,7 +504,7 @@
         "kind": 6,
         "importPath": "entity.report",
         "description": "entity.report",
-        "peekOfCode": "class ReportProcess(RecordManager):\n    FOTMAT_REPORT = \"csv\"\n    GENERAL_REPORT_ARCHIVE = \"SERVIDOR_PRUEBA_ORACLE_431_2 - Hoja 1.csv\"\n    BASIC_RECORDS_INFORMATION_REPORT=\"SERVIDOR_PRUEBA_ORACLE_431_2 - Hoja 1.csv\"\n    FICHAS_POSTGRES =\"SERVIDOR_PRUEBA_ORACLE.csv\"\n    def __init__(self, oc_connection, pg_connection, type_report):\n        super().__init__(oc_connection, pg_connection)\n        self.pg_connection = pg_connection  \n        self.oc_connection = oc_connection\n        self.type_report = type_report",
+        "peekOfCode": "class ReportProcess(RecordManager):\n    FOTMAT_REPORT = \"csv\" \n    GENERAL_REPORT_ARCHIVE = \"SERVIDOR_PRUEBA_ORACLE_431_2 - Hoja 1.csv\"\n    BASIC_RECORDS_INFORMATION_REPORT=\"SERVIDOR_PRUEBA_ORACLE_431_2 - Hoja 1.csv\"\n    FICHAS_POSTGRES =\"SERVIDOR_PRUEBA_ORACLE.csv\"\n    def __init__(self, oc_connection, pg_connection, type_report):\n        super().__init__(oc_connection, pg_connection)\n        self.pg_connection = pg_connection  \n        self.oc_connection = oc_connection\n        self.type_report = type_report",
         "detail": "entity.report",
         "documentation": {}
     },

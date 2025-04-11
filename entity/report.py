@@ -17,7 +17,7 @@ import datetime
 
 class ReportProcess(RecordManager):
     
-    FOTMAT_REPORT = "csv"
+    FOTMAT_REPORT = "csv" 
     
     GENERAL_REPORT_ARCHIVE = "SERVIDOR_PRUEBA_ORACLE_431_2 - Hoja 1.csv"
     BASIC_RECORDS_INFORMATION_REPORT="SERVIDOR_PRUEBA_ORACLE_431_2 - Hoja 1.csv"
