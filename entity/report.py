@@ -59,8 +59,8 @@ class ReportProcess(RecordManager):
                 result = self._create_report_type_two()
                 
             #persona  
-            elif self.type_report ==3:
-                result = self._create_report_type_three()
+                '''elif self.type_report ==3:
+                result = self._create_report_type_three()'''
             #informacion basica de fichas   
             elif self.type_report ==4:
                 result = self._create_report_type_four()
